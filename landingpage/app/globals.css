@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette */
+  --color-ink: #1c3344;
+  --color-slate: #2c4456;
+  --color-body: #4c5c67;
+  --color-muted: #5c6c77;
+  --color-water: #9cc0d4;
+  --color-water-soft: #c9dce5;
+  --color-mist: #7fa0b2;
+  --color-mist-deep: #5e8298;
+  --color-deep: #16293a;
+  --color-canvas: #f4f8f9;
+  --color-line: #e2ecef;
+  --color-field-line: #cfe0e7;
+
+  /* Type families (wired to next/font CSS variables) */
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", serif;
+  --font-grotesk: var(--font-hanken), "Hanken Grotesk", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-slate);
+  font-family: var(--font-grotesk);
+  -webkit-font-smoothing: antialiased;
+}
+
+input::placeholder {
+  color: #9cb2be;
+}
+
+@keyframes qwFade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes qwFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-qw-fade {
+  animation: qwFade 0.8s ease both;
+}
+
+.animate-qw-float {
+  /* easeInOutSine — glides through the turning points instead of
+     stalling at them, for a continuous, fluid drift */
+  animation: qwFloat 9s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
