@@ -23,6 +23,7 @@
 - **Fonts:** Cormorant Garamond (serif), Hanken Grotesk (sans).
 - **Mockups (visual source of truth):** `/Users/damianveltkamp/Documents/development/2nd-brain/saas/christian-apps/design/onboarding/01..12-quiet-waters-onboarding.png`.
 - **Design spec:** `docs/superpowers/specs/2026-07-05-quiet-waters-onboarding-design.md`.
+- **ACTUAL project structure (Expo SDK 57 template, confirmed in Task 1):** the Expo Router root is `mobile/src/app/` (NOT `mobile/app/`). The `@/*` alias maps to `mobile/src/*`, so route files import as `@/app/onboarding/XX`, components as `@/components`, logic as `@/lib` / `@/store` / `@/theme`. Bundled images live at `mobile/assets/images/`; from `src/components/*` reference them as `../../assets/images/...`, and from route files under `src/app/**` count depth accordingly (e.g. `../../../assets/images/...` from `src/app/onboarding/`). No NativeWind is installed — style with inline styles / StyleSheet as the plan shows; ignore the template's web-only `src/global.css`.
 
 ---
 
@@ -158,7 +159,7 @@ Add to `package.json`:
 }
 ```
 
-- [ ] **Step 7: Remove the starter `app/(tabs)` scaffold; keep a temporary blank `app/index.tsx`**
+- [ ] **Step 7: Remove the starter `src/app/(tabs)` scaffold; keep a temporary blank `src/app/index.tsx`**
 
 ```tsx
 import { Text, View } from 'react-native';
@@ -306,14 +307,14 @@ git commit -m "feat(mobile): add theme tokens and brand assets"
 ### Task 3: Font loading, splash gate & entry routing
 
 **Files:**
-- Modify: `mobile/app/_layout.tsx`, `mobile/app/index.tsx`
-- Create: `mobile/app/home.tsx`
+- Modify: `mobile/src/app/_layout.tsx`, `mobile/src/app/index.tsx`
+- Create: `mobile/src/app/home.tsx`
 
 **Interfaces:**
 - Consumes: `isOnboardingComplete()` (Task 6 — until then, hard-code `false` and wire in Task 6). *Order note: implement Task 6 before this if executing strictly; otherwise stub `isOnboardingComplete` inline and replace.*
 - Produces: font-gated app root; entry redirect.
 
-- [ ] **Step 1: Implement `app/_layout.tsx` (font load + splash gate)**
+- [ ] **Step 1: Implement `src/app/_layout.tsx` (font load + splash gate)**
 
 ```tsx
 import { useFonts, CormorantGaramond_500Medium, CormorantGaramond_600SemiBold, CormorantGaramond_500Medium_Italic } from '@expo-google-fonts/cormorant-garamond';
@@ -335,7 +336,7 @@ export default function RootLayout() {
 }
 ```
 
-- [ ] **Step 2: Implement `app/index.tsx` (entry redirect)**
+- [ ] **Step 2: Implement `src/app/index.tsx` (entry redirect)**
 
 ```tsx
 import { Redirect } from 'expo-router';
@@ -350,7 +351,7 @@ export default function Index() {
 }
 ```
 
-- [ ] **Step 3: Implement placeholder `app/home.tsx`**
+- [ ] **Step 3: Implement placeholder `src/app/home.tsx`**
 
 ```tsx
 import { View } from 'react-native';
@@ -721,7 +722,7 @@ export function Screen({ variant, children, contentStyle }: Props) {
 }
 ```
 
-Note: ensure `SafeAreaProvider` wraps the app — add it in `app/_layout.tsx` around `<Stack>` (import from `react-native-safe-area-context`, already an Expo dep).
+Note: ensure `SafeAreaProvider` wraps the app — add it in `src/app/_layout.tsx` around `<Stack>` (import from `react-native-safe-area-context`, already an Expo dep).
 
 - [ ] **Step 5: Implement `Eyebrow.tsx` and `Divider.tsx`**
 
@@ -760,7 +761,7 @@ Expected: PASS (2 tests).
 - [ ] **Step 8: Commit**
 
 ```bash
-git add mobile/src/components mobile/app/_layout.tsx
+git add mobile/src/components mobile/src/app/_layout.tsx
 git commit -m "feat(mobile): layout primitives (Screen, ThemedText, Eyebrow, Divider)"
 ```
 
@@ -1188,7 +1189,7 @@ git commit -m "feat(mobile): presentational onboarding components"
 ### Task 13: Onboarding stack layout + navigation helper
 
 **Files:**
-- Create: `mobile/app/onboarding/_layout.tsx`
+- Create: `mobile/src/app/onboarding/_layout.tsx`
 - Create: `mobile/src/lib/onboardingRoutes.ts`
 - Test: `mobile/src/lib/__tests__/onboardingRoutes.test.ts`
 
@@ -1234,7 +1235,7 @@ export function nextRoute(current: string): string | null {
 }
 ```
 
-- [ ] **Step 4: Implement `app/onboarding/_layout.tsx`**
+- [ ] **Step 4: Implement `src/app/onboarding/_layout.tsx`**
 
 ```tsx
 import { Stack } from 'expo-router';
@@ -1251,7 +1252,7 @@ Expected: PASS (3 tests).
 - [ ] **Step 6: Commit**
 
 ```bash
-git add mobile/app/onboarding/_layout.tsx mobile/src/lib/onboardingRoutes.ts mobile/src/lib/__tests__/onboardingRoutes.test.ts
+git add mobile/src/app/onboarding/_layout.tsx mobile/src/lib/onboardingRoutes.ts mobile/src/lib/__tests__/onboardingRoutes.test.ts
 git commit -m "feat(mobile): onboarding stack layout and route helper"
 ```
 
@@ -1260,8 +1261,8 @@ git commit -m "feat(mobile): onboarding stack layout and route helper"
 ### Task 14: Screens 1–2 (Aspiration, Problem)
 
 **Files:**
-- Create: `mobile/app/onboarding/01-aspiration.tsx`, `02-problem.tsx`
-- Test: `mobile/app/onboarding/__tests__/screens-01-02.test.tsx`
+- Create: `mobile/src/app/onboarding/01-aspiration.tsx`, `02-problem.tsx`
+- Test: `mobile/src/app/onboarding/__tests__/screens-01-02.test.tsx`
 
 **Interfaces:**
 - Consumes: `Screen`, `Eyebrow`, `ThemedText`, `Divider`, `CTAButton`, `ScreenTimeCard`; `useRouter` from expo-router; `nextRoute`.
@@ -1271,7 +1272,7 @@ git commit -m "feat(mobile): onboarding stack layout and route helper"
 ```tsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import Aspiration from '@/../app/onboarding/01-aspiration';
+import Aspiration from '@/app/onboarding/01-aspiration';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() }, useRouter: () => ({ push: jest.fn() }) }));
 
@@ -1282,7 +1283,7 @@ test('screen 1 shows headline and advances', () => {
 });
 ```
 
-*(Note: import path for route files is `@/../app/...`; if that resolves awkwardly, colocate the test beside the route file and use a relative import.)*
+*(Note: import path for route files is `@/app/...`; if that resolves awkwardly, colocate the test beside the route file and use a relative import.)*
 
 - [ ] **Step 2: Run test to verify it fails**
 
@@ -1302,7 +1303,7 @@ export default function Aspiration() {
   return (
     <Screen variant="light">
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.md }}>
-        <Image source={require('../../assets/images/symbol-slate.png')} style={{ width: 44, height: 44, resizeMode: 'contain' }} />
+        <Image source={require('../../../assets/images/symbol-slate.png')} style={{ width: 44, height: 44, resizeMode: 'contain' }} />
         <Eyebrow>A Place To Begin</Eyebrow>
         <ThemedText variant="title" align="center">You want to feel{'\n'}closer to God.</ThemedText>
         <Divider />
@@ -1353,7 +1354,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add mobile/app/onboarding/01-aspiration.tsx mobile/app/onboarding/02-problem.tsx mobile/app/onboarding/__tests__/screens-01-02.test.tsx
+git add mobile/src/app/onboarding/01-aspiration.tsx mobile/src/app/onboarding/02-problem.tsx mobile/src/app/onboarding/__tests__/screens-01-02.test.tsx
 git commit -m "feat(mobile): onboarding screens 1-2"
 ```
 
@@ -1362,8 +1363,8 @@ git commit -m "feat(mobile): onboarding screens 1-2"
 ### Task 15: Screens 3–4 (Question, Stakes) — store + calc integration
 
 **Files:**
-- Create: `mobile/app/onboarding/03-question.tsx`, `04-stakes.tsx`
-- Test: `mobile/app/onboarding/__tests__/screens-03-04.test.tsx`
+- Create: `mobile/src/app/onboarding/03-question.tsx`, `04-stakes.tsx`
+- Test: `mobile/src/app/onboarding/__tests__/screens-03-04.test.tsx`
 
 **Interfaces:**
 - Consumes: `useOnboardingStore`, `HOURS_BUCKETS`, `hoursPerYear`, `fullDays`, `formatNumber`, `RadioOption`.
@@ -1373,8 +1374,8 @@ git commit -m "feat(mobile): onboarding screens 1-2"
 ```tsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { useOnboardingStore } from '@/store/onboarding';
-import Question from '@/../app/onboarding/03-question';
-import Stakes from '@/../app/onboarding/04-stakes';
+import Question from '@/app/onboarding/03-question';
+import Stakes from '@/app/onboarding/04-stakes';
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
 
@@ -1472,7 +1473,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add mobile/app/onboarding/03-question.tsx mobile/app/onboarding/04-stakes.tsx mobile/app/onboarding/__tests__/screens-03-04.test.tsx
+git add mobile/src/app/onboarding/03-question.tsx mobile/src/app/onboarding/04-stakes.tsx mobile/src/app/onboarding/__tests__/screens-03-04.test.tsx
 git commit -m "feat(mobile): onboarding screens 3-4 with calculated stakes"
 ```
 
@@ -1481,8 +1482,8 @@ git commit -m "feat(mobile): onboarding screens 3-4 with calculated stakes"
 ### Task 16: Screens 5–6 (Promise, Vow) — preview + prayer auto-advance
 
 **Files:**
-- Create: `mobile/app/onboarding/05-promise.tsx`, `06-vow.tsx`
-- Test: `mobile/app/onboarding/__tests__/screens-05-06.test.tsx`
+- Create: `mobile/src/app/onboarding/05-promise.tsx`, `06-vow.tsx`
+- Test: `mobile/src/app/onboarding/__tests__/screens-05-06.test.tsx`
 
 **Interfaces:**
 - Consumes: `LockScreenPreview`, `PrayerButton`, `vowHours`, `formatNumber`, store.
@@ -1496,7 +1497,7 @@ jest.mock('expo-router', () => ({ useRouter: () => ({ push }) }));
 jest.mock('@/lib/haptics', () => ({ pulseFeedback: jest.fn(), successFeedback: jest.fn() }));
 jest.useFakeTimers();
 import { useOnboardingStore } from '@/store/onboarding';
-import Vow from '@/../app/onboarding/06-vow';
+import Vow from '@/app/onboarding/06-vow';
 
 test('vow shows calculated hours and advances after full hold', () => {
   useOnboardingStore.getState().setBucket('4-5');
@@ -1585,7 +1586,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add mobile/app/onboarding/05-promise.tsx mobile/app/onboarding/06-vow.tsx mobile/app/onboarding/__tests__/screens-05-06.test.tsx
+git add mobile/src/app/onboarding/05-promise.tsx mobile/src/app/onboarding/06-vow.tsx mobile/src/app/onboarding/__tests__/screens-05-06.test.tsx
 git commit -m "feat(mobile): onboarding screens 5-6 with prayer auto-advance"
 ```
 
@@ -1594,8 +1595,8 @@ git commit -m "feat(mobile): onboarding screens 5-6 with prayer auto-advance"
 ### Task 17: Screens 7–8 (WOW placeholder, Land & Widen)
 
 **Files:**
-- Create: `mobile/app/onboarding/07-wow.tsx`, `08-land.tsx`
-- Test: `mobile/app/onboarding/__tests__/screens-07-08.test.tsx`
+- Create: `mobile/src/app/onboarding/07-wow.tsx`, `08-land.tsx`
+- Test: `mobile/src/app/onboarding/__tests__/screens-07-08.test.tsx`
 
 **Interfaces:**
 - Consumes: `PlaceholderBox`, `LockScreenPreview`, `CTAButton`.
@@ -1605,8 +1606,8 @@ git commit -m "feat(mobile): onboarding screens 5-6 with prayer auto-advance"
 ```tsx
 import { render, screen } from '@testing-library/react-native';
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
-import Wow from '@/../app/onboarding/07-wow';
-import Land from '@/../app/onboarding/08-land';
+import Wow from '@/app/onboarding/07-wow';
+import Land from '@/app/onboarding/08-land';
 
 test('wow shows creator placeholder', () => {
   render(<Wow />);
@@ -1689,7 +1690,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add mobile/app/onboarding/07-wow.tsx mobile/app/onboarding/08-land.tsx mobile/app/onboarding/__tests__/screens-07-08.test.tsx
+git add mobile/src/app/onboarding/07-wow.tsx mobile/src/app/onboarding/08-land.tsx mobile/src/app/onboarding/__tests__/screens-07-08.test.tsx
 git commit -m "feat(mobile): onboarding screens 7-8"
 ```
 
@@ -1698,8 +1699,8 @@ git commit -m "feat(mobile): onboarding screens 7-8"
 ### Task 18: Screen 9 (Permissions) — notification request
 
 **Files:**
-- Create: `mobile/app/onboarding/09-permissions.tsx`
-- Test: `mobile/app/onboarding/__tests__/screen-09.test.tsx`
+- Create: `mobile/src/app/onboarding/09-permissions.tsx`
+- Test: `mobile/src/app/onboarding/__tests__/screen-09.test.tsx`
 
 **Interfaces:**
 - Consumes: `NotificationPreview`, `CTAButton`, `expo-notifications` `requestPermissionsAsync`.
@@ -1712,7 +1713,7 @@ import * as Notifications from 'expo-notifications';
 const push = jest.fn();
 jest.mock('expo-router', () => ({ useRouter: () => ({ push }) }));
 jest.mock('expo-notifications', () => ({ requestPermissionsAsync: jest.fn().mockResolvedValue({ status: 'denied' }) }));
-import Permissions from '@/../app/onboarding/09-permissions';
+import Permissions from '@/app/onboarding/09-permissions';
 
 test('requests permission and advances even if denied', async () => {
   render(<Permissions />);
@@ -1772,7 +1773,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add mobile/app/onboarding/09-permissions.tsx mobile/app/onboarding/__tests__/screen-09.test.tsx
+git add mobile/src/app/onboarding/09-permissions.tsx mobile/src/app/onboarding/__tests__/screen-09.test.tsx
 git commit -m "feat(mobile): onboarding screen 9 notification request"
 ```
 
@@ -1781,8 +1782,8 @@ git commit -m "feat(mobile): onboarding screen 9 notification request"
 ### Task 19: Screens 10–12 (Paywall) + completion → home
 
 **Files:**
-- Create: `mobile/app/onboarding/10-paywall-intro.tsx`, `11-paywall-reminder.tsx`, `12-paywall-plans.tsx`
-- Test: `mobile/app/onboarding/__tests__/screens-10-12.test.tsx`
+- Create: `mobile/src/app/onboarding/10-paywall-intro.tsx`, `11-paywall-reminder.tsx`, `12-paywall-plans.tsx`
+- Test: `mobile/src/app/onboarding/__tests__/screens-10-12.test.tsx`
 
 **Interfaces:**
 - Consumes: `PlaceholderBox`, `TimelineStep`, `PlanCard`, `CTAButton`, `setOnboardingComplete`, `useRouter().replace`.
@@ -1796,7 +1797,7 @@ const replace = jest.fn();
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn(), replace }) }));
 jest.mock('@/lib/storage', () => ({ setOnboardingComplete: jest.fn().mockResolvedValue(undefined) }));
 import { setOnboardingComplete } from '@/lib/storage';
-import Plans from '@/../app/onboarding/12-paywall-plans';
+import Plans from '@/app/onboarding/12-paywall-plans';
 
 test('completing paywall persists flag and routes home', async () => {
   render(<Plans />);
@@ -1916,7 +1917,7 @@ Expected: PASS.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add mobile/app/onboarding/10-paywall-intro.tsx mobile/app/onboarding/11-paywall-reminder.tsx mobile/app/onboarding/12-paywall-plans.tsx mobile/app/onboarding/__tests__/screens-10-12.test.tsx
+git add mobile/src/app/onboarding/10-paywall-intro.tsx mobile/src/app/onboarding/11-paywall-reminder.tsx mobile/src/app/onboarding/12-paywall-plans.tsx mobile/src/app/onboarding/__tests__/screens-10-12.test.tsx
 git commit -m "feat(mobile): onboarding screens 10-12 paywall and completion"
 ```
 
