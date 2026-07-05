@@ -17,7 +17,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     CormorantGaramond_500Medium,
     CormorantGaramond_600SemiBold,
     CormorantGaramond_500Medium_Italic,
@@ -26,9 +26,9 @@ export default function RootLayout() {
     HankenGrotesk_600SemiBold,
   });
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync();
-  }, [loaded]);
-  if (!loaded) return null;
+    if (loaded || error) SplashScreen.hideAsync();
+  }, [loaded, error]);
+  if (!loaded && !error) return null;
   return (
     <SafeAreaProvider>
       <Stack screenOptions={{ headerShown: false }} />

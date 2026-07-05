@@ -1,6 +1,5 @@
 import { View } from 'react-native';
-import { Screen } from '@/components';
-import { ThemedText } from '@/components';
+import { Screen, ThemedText } from '@/components';
 
 export default function Home() {
   return (
