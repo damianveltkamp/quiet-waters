@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { Image } from 'react-native';
 import { colors } from '@/theme';
 import { pulseFeedback, successFeedback } from '@/lib/haptics';
 

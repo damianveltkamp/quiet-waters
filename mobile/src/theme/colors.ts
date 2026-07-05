@@ -11,6 +11,7 @@ export const colors = {
   textMuted: '#4C5C67',
   textFaint: '#7C8C97',
   success: '#3E7C5A',
+  successPale: '#E4F0E9',
 } as const;
 
 export const gradients = {

@@ -8,7 +8,7 @@ export default function Land() {
   return (
     <Screen variant="light">
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.md }}>
-        <View style={{ backgroundColor: '#E4F0E9', borderRadius: 999, paddingVertical: spacing.xs, paddingHorizontal: spacing.md }}>
+        <View style={{ backgroundColor: colors.successPale, borderRadius: 999, paddingVertical: spacing.xs, paddingHorizontal: spacing.md }}>
           <ThemedText variant="eyebrow" color={colors.success}>✓ Your first background is ready</ThemedText>
         </View>
         <ThemedText variant="title" align="center">It's waiting for you.</ThemedText>
