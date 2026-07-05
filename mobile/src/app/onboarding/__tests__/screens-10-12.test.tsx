@@ -18,5 +18,15 @@ test('completing paywall persists flag and routes home', async () => {
 
 test('yearly plan is selected by default', async () => {
   await render(<Plans />);
-  expect(screen.getByText('SAVE 92%')).toBeOnTheScreen();
+  expect(screen.getByTestId('plan-card-yearly').props.accessibilityState.selected).toBe(true);
+  expect(screen.getByTestId('plan-card-weekly').props.accessibilityState.selected).toBe(false);
+});
+
+test('pressing weekly plan toggles selection to weekly', async () => {
+  await render(<Plans />);
+  fireEvent.press(screen.getByTestId('plan-card-weekly'));
+  await waitFor(() => {
+    expect(screen.getByTestId('plan-card-weekly').props.accessibilityState.selected).toBe(true);
+    expect(screen.getByTestId('plan-card-yearly').props.accessibilityState.selected).toBe(false);
+  });
 });

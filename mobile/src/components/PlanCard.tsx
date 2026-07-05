@@ -16,6 +16,8 @@ export function PlanCard({ title, priceLabel, subLabel, periodLabel, selected, b
   return (
     <Pressable
       onPress={onPress}
+      testID={`plan-card-${title.toLowerCase()}`}
+      accessibilityState={{ selected }}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
