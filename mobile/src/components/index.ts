@@ -4,3 +4,4 @@ export { Eyebrow } from './Eyebrow';
 export { Divider } from './Divider';
 export { CTAButton } from './CTAButton';
 export { RadioOption } from './RadioOption';
+export { PrayerButton } from './PrayerButton';
