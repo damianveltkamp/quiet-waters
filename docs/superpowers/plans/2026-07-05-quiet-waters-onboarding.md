@@ -17,7 +17,7 @@
 - **Wallpaper creator (screen 7) and app-home screenshot (screen 10) are dashed placeholders.**
 - **Haptics required:** every CTA press fires `Haptics.impactAsync(Medium)`; the screen-6 prayer button fires a haptic pulse every 1000ms while held.
 - **Screen-3 options (authoritative, from mockup):** `1-3`, `3-4`, `4-5`, `5-6`, `6-7`, `7+`. Default preselection: `4-5`.
-- **Number formula:** midpoints `1-3→2, 3-4→3.5, 4-5→4.5, 5-6→5.5, 6-7→6.5, 7+→7.5`; `hoursPerYear=round(midpoint×365)`, `fullDays=round(hoursPerYear/24)`, `vowHours=round(hoursPerYear/10)`. Displayed with locale grouping. (`4-5` → 1,642 / 68 / 164.)
+- **Number formula:** midpoints `1-3→2, 3-4→3.5, 4-5→4.5, 5-6→5.5, 6-7→6.5, 7+→7.5`; `hoursPerYear=floor(midpoint×365)`, `fullDays=round(hoursPerYear/24)`, `vowHours=round(hoursPerYear/10)`. Displayed with locale grouping. (`4-5` → 1,642 / 68 / 164.)
 - **Navigation:** forward-only, no visible back button, swipe-back gesture disabled.
 - **Brand colors:** primary `#1C3344`, deep `#2C4456`, mid `#5E8298`, soft `#8AA2B0`, accent `#9CC0D4`, pale `#C9DCE5` / `#E2ECEF`, surface `#F4F8F9` / `#FFFFFF`, muted text `#4C5C67` / `#7C8C97`, success green `#3E7C5A` (sampled; refine against screen-8 mockup).
 - **Fonts:** Cormorant Garamond (serif), Hanken Grotesk (sans).
