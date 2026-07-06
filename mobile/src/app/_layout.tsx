@@ -13,6 +13,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppProviders } from '@/providers/AppProviders';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,7 +32,9 @@ export default function RootLayout() {
   if (!loaded && !error) return null;
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <AppProviders>
+        <Stack screenOptions={{ headerShown: false }} />
+      </AppProviders>
     </SafeAreaProvider>
   );
 }
