@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react-native';
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
 
-import Wow from '@/app/onboarding/07-wow';
-import Land from '@/app/onboarding/08-land';
+import Wow from '@/app/onboarding/08-wow';
+import Land from '@/app/onboarding/09-land';
 
 test('wow shows creator placeholder', async () => {
   await render(<Wow />);

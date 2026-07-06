@@ -6,7 +6,7 @@ jest.mock('@/lib/haptics', () => ({ pulseFeedback: jest.fn(), successFeedback: j
 jest.useFakeTimers();
 
 import { useOnboardingStore } from '@/store/onboarding';
-import Vow from '@/app/onboarding/06-vow';
+import Vow from '@/app/onboarding/07-vow';
 
 test('vow shows calculated hours and advances after full hold', async () => {
   useOnboardingStore.getState().setBucket('4-5');
@@ -20,5 +20,5 @@ test('vow shows calculated hours and advances after full hold', async () => {
     jest.advanceTimersByTime(3000);
   });
 
-  expect(mockPush).toHaveBeenCalledWith('/onboarding/07-wow');
+  expect(mockPush).toHaveBeenCalledWith('/onboarding/08-wow');
 });

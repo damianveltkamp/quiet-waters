@@ -19,7 +19,7 @@ import { setOnboardingComplete } from '@/lib/storage';
 import { getCurrentOffering, purchasePackage, restore, hasPro } from '@/lib/revenuecat';
 import { usePaywallContent } from '@/hooks/usePaywallContent';
 import { DEFAULT_PAYWALL_CONTENT } from '@/lib/experiments';
-import Plans from '@/app/onboarding/12-paywall-plans';
+import Plans from '@/app/onboarding/13-paywall-plans';
 
 const contentWith = (overrides = {}) => ({
   variant: 'a',

@@ -8,7 +8,7 @@ export default function Permissions() {
   const router = useRouter();
   const handle = async () => {
     try { await Notifications.requestPermissionsAsync(); } catch { /* ignore */ }
-    router.push('/onboarding/10-paywall-intro'); // advance regardless of outcome
+    router.push('/onboarding/11-paywall-intro'); // advance regardless of outcome
   };
   return (
     <Screen variant="light">

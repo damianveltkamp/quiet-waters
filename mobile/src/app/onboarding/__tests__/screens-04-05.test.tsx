@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { useOnboardingStore } from '@/store/onboarding';
-import Question from '@/app/onboarding/03-question';
-import Stakes from '@/app/onboarding/04-stakes';
+import Question from '@/app/onboarding/04-question';
+import Stakes from '@/app/onboarding/05-stakes';
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
 

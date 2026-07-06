@@ -16,7 +16,7 @@ export default function Wow() {
         </View>
       </View>
       <View style={{ paddingBottom: spacing.lg }}>
-        <CTAButton label="Make it mine" onPress={() => router.push('/onboarding/08-land')} />
+        <CTAButton label="Make it mine" onPress={() => router.push('/onboarding/09-land')} />
       </View>
     </Screen>
   );

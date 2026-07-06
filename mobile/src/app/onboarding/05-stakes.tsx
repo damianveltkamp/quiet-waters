@@ -21,7 +21,7 @@ export default function Stakes() {
         <ThemedText variant="quote" color={colors.textFaint} align="center">Imagine giving even a tenth of it back to Him.</ThemedText>
       </View>
       <View style={{ paddingBottom: spacing.lg }}>
-        <CTAButton label="Show me how" onPress={() => router.push('/onboarding/05-promise')} />
+        <CTAButton label="Show me how" onPress={() => router.push('/onboarding/06-promise')} />
       </View>
     </Screen>
   );

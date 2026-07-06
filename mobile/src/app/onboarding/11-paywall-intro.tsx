@@ -14,7 +14,7 @@ export default function PaywallIntro() {
         </View>
       </View>
       <View style={{ paddingBottom: spacing.lg }}>
-        <CTAButton label="Continue" onPress={() => router.push('/onboarding/11-paywall-reminder')} />
+        <CTAButton label="Continue" onPress={() => router.push('/onboarding/12-paywall-reminder')} />
       </View>
     </Screen>
   );

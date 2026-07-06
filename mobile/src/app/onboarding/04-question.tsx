@@ -23,7 +23,7 @@ export default function Question() {
         ))}
       </View>
       <View style={{ paddingBottom: spacing.lg }}>
-        <CTAButton label="Continue" onPress={() => router.push('/onboarding/04-stakes')} />
+        <CTAButton label="Continue" onPress={() => router.push('/onboarding/05-stakes')} />
       </View>
     </Screen>
   );

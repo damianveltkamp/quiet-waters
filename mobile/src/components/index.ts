@@ -8,7 +8,5 @@ export { PrayerButton } from './PrayerButton';
 export { LockScreenPreview } from './LockScreenPreview';
 export { NotificationPreview } from './NotificationPreview';
 export { PlaceholderBox } from './PlaceholderBox';
-export { ScreenTimeCard } from './ScreenTimeCard';
-export { BarChart } from './BarChart';
 export { PlanCard } from './PlanCard';
 export { TimelineStep } from './TimelineStep';

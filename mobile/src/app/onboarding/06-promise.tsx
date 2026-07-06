@@ -39,7 +39,7 @@ export default function Promise() {
       <View style={{ paddingBottom: spacing.lg }}>
         <CTAButton
           label="See how it works"
-          onPress={() => router.push("/onboarding/06-vow")}
+          onPress={() => router.push("/onboarding/07-vow")}
         />
       </View>
     </Screen>

@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react-native';
 
 import Aspiration from '@/app/onboarding/01-aspiration';
-import Problem from '@/app/onboarding/02-problem';
+import Reflection from '@/app/onboarding/02-reflection';
+import Problem from '@/app/onboarding/03-problem';
 import { useVariant } from '@/hooks/useVariant';
 
 jest.mock('expo-router', () => ({
@@ -19,10 +20,19 @@ describe('screen 1: Aspiration', () => {
   });
 });
 
-describe('screen 2: Problem', () => {
-  it('shows the screen time card and advances', async () => {
+describe('screen 2: Reflection', () => {
+  it('shows the reflection prompt and advances', async () => {
+    await render(<Reflection />);
+    expect(screen.getByText(/attention than God/i)).toBeOnTheScreen();
+    fireEvent.press(screen.getByText('Yes, I feel that'));
+  });
+});
+
+describe('screen 3: Problem', () => {
+  it('shows the screen time figures and advances', async () => {
     await render(<Problem />);
-    expect(screen.getByText('4h+')).toBeOnTheScreen();
+    expect(screen.getByText('4')).toBeOnTheScreen();
+    expect(screen.getByText('61')).toBeOnTheScreen();
     fireEvent.press(screen.getByText('I want that'));
   });
 });

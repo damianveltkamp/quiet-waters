@@ -31,7 +31,7 @@ export default function Vow() {
           {"\n"}to drawing closer to God.
         </ThemedText>
         <Eyebrow color={colors.soft}>Tap and hold to pray</Eyebrow>
-        <PrayerButton onComplete={() => router.push("/onboarding/07-wow")} />
+        <PrayerButton onComplete={() => router.push("/onboarding/08-wow")} />
         <ThemedText variant="quote" color={colors.soft} align="center">
           Keep holding and let this become your prayer.
         </ThemedText>

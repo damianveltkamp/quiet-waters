@@ -4,7 +4,7 @@ import { usePostHog } from 'posthog-react-native';
 import { isOnboardingComplete } from '@/lib/storage';
 import { getAppUserId, getCustomerInfo, hasPro, initPurchases } from '@/lib/revenuecat';
 
-type Target = '/home' | '/onboarding/10-paywall-intro' | '/onboarding/01-aspiration';
+type Target = '/home' | '/onboarding/11-paywall-intro' | '/onboarding/01-aspiration';
 
 export default function Index() {
   const posthog = usePostHog();
@@ -22,7 +22,7 @@ export default function Index() {
         if (hasPro(info)) {
           next = '/home';
         } else if (await isOnboardingComplete()) {
-          next = '/onboarding/10-paywall-intro';
+          next = '/onboarding/11-paywall-intro';
         }
       } catch {
         // fail open into the onboarding funnel; /home stays entitlement-gated
@@ -32,7 +32,7 @@ export default function Index() {
         } catch {
           complete = false;
         }
-        next = complete ? '/onboarding/10-paywall-intro' : '/onboarding/01-aspiration';
+        next = complete ? '/onboarding/11-paywall-intro' : '/onboarding/01-aspiration';
       }
       if (!cancelled) setTarget(next);
     })();

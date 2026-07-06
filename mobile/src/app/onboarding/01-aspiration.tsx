@@ -38,7 +38,7 @@ export default function Aspiration() {
       <View style={{ paddingBottom: spacing.lg }}>
         <CTAButton
           label="Begin your journey"
-          onPress={() => router.push("/onboarding/02-problem")}
+          onPress={() => router.push("/onboarding/02-reflection")}
         />
       </View>
     </Screen>

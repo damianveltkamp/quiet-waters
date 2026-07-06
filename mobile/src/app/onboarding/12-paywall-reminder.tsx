@@ -17,7 +17,7 @@ export default function PaywallReminder() {
         <ThemedText variant="title" align="center">We'll remind you before your trial ends.</ThemedText>
       </View>
       <View style={{ paddingBottom: spacing.lg }}>
-        <CTAButton label="Try for $0.00" onPress={() => router.push('/onboarding/12-paywall-plans')} />
+        <CTAButton label="Try for $0.00" onPress={() => router.push('/onboarding/13-paywall-plans')} />
       </View>
     </Screen>
   );

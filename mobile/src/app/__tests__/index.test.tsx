@@ -31,7 +31,7 @@ test('routes to the paywall intro when onboarding is done but no entitlement', a
   (isOnboardingComplete as jest.Mock).mockResolvedValue(true);
   render(<Index />);
   await waitFor(() =>
-    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/10-paywall-intro' }),
+    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/11-paywall-intro' }),
   );
 });
 
@@ -59,7 +59,7 @@ test('fails open to paywall intro when getCustomerInfo rejects and onboarding is
   (isOnboardingComplete as jest.Mock).mockResolvedValue(true);
   render(<Index />);
   await waitFor(() =>
-    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/10-paywall-intro' }),
+    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/11-paywall-intro' }),
   );
   expect(mockRedirect).not.toHaveBeenCalledWith({ href: '/home' });
 });

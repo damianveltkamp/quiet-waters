@@ -18,7 +18,7 @@ export default function Land() {
         </ThemedText>
       </View>
       <View style={{ paddingBottom: spacing.lg }}>
-        <CTAButton label="Continue" onPress={() => router.push('/onboarding/09-permissions')} />
+        <CTAButton label="Continue" onPress={() => router.push('/onboarding/10-permissions')} />
       </View>
     </Screen>
   );
