@@ -14,6 +14,7 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
         capture_pageview: true,
         person_profiles: "identified_only",
+        disable_session_recording: true,
       });
       initialized = true;
     }
