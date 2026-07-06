@@ -64,17 +64,31 @@ API key stays server-side. Kit owns the email sending and the wallpaper file.
   status on failure. Never leaks the API key or raw Kit error details to the
   client (logs those server-side).
 
-**Kit API version note:** The v4 `create subscriber` endpoint
-(`POST https://api.kit.com/v4/subscribers`, header `X-Kit-Api-Key`) defaults
-new subscribers to `active` and does **not** send a double opt-in
-confirmation. The form-subscribe path
-(`POST https://api.convertkit.com/v3/forms/{form_id}/subscribe` with
-`api_key` + `email`) is the standard lead-magnet route that respects the
-form's double opt-in setting and triggers the incentive email. **The
-implementation must confirm, against current Kit docs at build time, which
-endpoint reliably triggers double opt-in + incentive email, and use that
-one.** The expectation is the v3 form-subscribe endpoint unless v4 has since
-gained an equivalent email-based, opt-in-respecting form subscription.
+**Kit API version — RESOLVED (2026-07-06): use v4.** The account's API key is a
+v4 key (`kit_…`, sent via the `X-Kit-Api-Key` header); the legacy v3 key is a
+separate credential we are deliberately not using, since v4 is the current,
+supported API. Kit's own developer docs confirm the double-opt-in path works
+in v4: *"Adding subscribers to double opt-in forms will trigger sending an
+Incentive Email. Subscribers already added to the specified form will not
+receive the Incentive Email again. The subscribers being added to the form
+must already exist."* The incentive email is simultaneously the confirmation
+(double opt-in) and the lead-magnet (wallpaper) delivery.
+
+Correct v4 flow (two calls, base `https://api.kit.com/v4`, header
+`X-Kit-Api-Key`):
+1. **Upsert subscriber** — `POST /v4/subscribers` with `{ email_address }`.
+   Behaves as an upsert (creates if new, updates if existing); returns
+   `{ subscriber: { id } }`.
+2. **Add to the double-opt-in form** — `POST /v4/forms/{KIT_FORM_ID}/subscribers/{id}`
+   with `{ referrer }` (the referrer carries UTM params). This triggers the
+   incentive/confirmation email. Re-subscribing an existing form member does
+   not re-send it (idempotent for the user).
+
+`KIT_API_KEY` now holds the v4 key; `KIT_FORM_ID` is the numeric id of the
+lead-magnet Form (which must have double opt-in enabled and an incentive email
+configured with the wallpaper). Note: Kit's incentive email uploads PDFs
+directly; for an image wallpaper, host the file and link it (or verify image
+upload) when configuring the Form.
 
 ### `app/components/SignupForm.tsx` (modified)
 - Replace the `localStorage` placeholder (current lines ~20–30) with a
