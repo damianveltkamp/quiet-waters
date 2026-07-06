@@ -26,9 +26,13 @@ export default function Index() {
         }
       } catch {
         // fail open into the onboarding funnel; /home stays entitlement-gated
-        next = (await isOnboardingComplete())
-          ? '/onboarding/10-paywall-intro'
-          : '/onboarding/01-aspiration';
+        let complete = false;
+        try {
+          complete = await isOnboardingComplete();
+        } catch {
+          complete = false;
+        }
+        next = complete ? '/onboarding/10-paywall-intro' : '/onboarding/01-aspiration';
       }
       if (!cancelled) setTarget(next);
     })();

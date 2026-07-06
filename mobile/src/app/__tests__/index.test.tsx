@@ -43,3 +43,23 @@ test('routes to onboarding start for a fresh user', async () => {
     expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/01-aspiration' }),
   );
 });
+
+test('fails open to onboarding start when getCustomerInfo rejects and onboarding is incomplete', async () => {
+  (getCustomerInfo as jest.Mock).mockRejectedValue(new Error('network error'));
+  (isOnboardingComplete as jest.Mock).mockResolvedValue(false);
+  render(<Index />);
+  await waitFor(() =>
+    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/01-aspiration' }),
+  );
+  expect(mockRedirect).not.toHaveBeenCalledWith({ href: '/home' });
+});
+
+test('fails open to paywall intro when getCustomerInfo rejects and onboarding is complete', async () => {
+  (getCustomerInfo as jest.Mock).mockRejectedValue(new Error('network error'));
+  (isOnboardingComplete as jest.Mock).mockResolvedValue(true);
+  render(<Index />);
+  await waitFor(() =>
+    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/10-paywall-intro' }),
+  );
+  expect(mockRedirect).not.toHaveBeenCalledWith({ href: '/home' });
+});
