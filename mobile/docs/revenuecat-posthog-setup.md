@@ -1,9 +1,9 @@
 # RevenueCat + PostHog setup
 
-## 1. Keys (replace placeholders in `app.json` → `expo.extra`)
-- `revenueCatIosKey`: RevenueCat → Project → API keys → **Apple public SDK key** (`appl_…`).
-- `posthogKey`: PostHog (EU) → Project settings → **Project API key** (`phc_…`).
-- `posthogHost`: `https://eu.i.posthog.com` (already set).
+## 1. Keys (`app.json` → `expo.extra`)
+- `revenueCatIosKey`: currently a **Test Store key** (`test_…`) — good for testing purchases in dev/Expo Go/sandbox WITHOUT App Store Connect products. **Before the real App Store build**, replace it with the **Apple App Store public SDK key** (`appl_…`) from RevenueCat → Project → API keys.
+- `posthogKey`: PostHog **US** → Project settings → **Project API key** (`phc_…`).
+- `posthogHost`: `https://us.i.posthog.com` (US region — already set).
 
 ## 2. RevenueCat
 - Create entitlement **`pro`**.

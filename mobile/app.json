@@ -37,9 +37,9 @@
       "expo-font"
     ],
     "extra": {
-      "revenueCatIosKey": "appl_PLACEHOLDER",
-      "posthogKey": "phc_PLACEHOLDER",
-      "posthogHost": "https://eu.i.posthog.com"
+      "revenueCatIosKey": "test_zPnhwfAvZwCFKBftbZQlHbMewgd",
+      "posthogKey": "phc_tvHD6K3pnZNfPJb8joUywX2gDbgaAZgaF6VuMeZkT5Vi",
+      "posthogHost": "https://us.i.posthog.com"
     },
     "experiments": {
       "typedRoutes": true,
