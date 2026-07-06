@@ -1,29 +1,45 @@
-import { render } from '@testing-library/react-native';
+import { render, waitFor } from '@testing-library/react-native';
 
-import Index from '@/app/index';
+const mockRedirect = jest.fn((_props: unknown) => null);
+jest.mock('expo-router', () => ({ Redirect: (props: any) => mockRedirect(props) }));
+jest.mock('@/lib/storage', () => ({ isOnboardingComplete: jest.fn() }));
+jest.mock('@/lib/revenuecat', () => ({
+  initPurchases: jest.fn(),
+  getAppUserId: jest.fn().mockResolvedValue('anon-1'),
+  getCustomerInfo: jest.fn(),
+  hasPro: jest.fn(),
+}));
+
 import { isOnboardingComplete } from '@/lib/storage';
+import { getCustomerInfo, hasPro, initPurchases } from '@/lib/revenuecat';
+import Index from '@/app/index';
 
-jest.mock('@/lib/storage', () => ({
-  isOnboardingComplete: jest.fn(),
-}));
+beforeEach(() => {
+  jest.clearAllMocks();
+  (getCustomerInfo as jest.Mock).mockResolvedValue({ entitlements: { active: {} } });
+});
 
-jest.mock('expo-router', () => ({
-  Redirect: ({ href }: { href: string }) => {
-    const { Text } = require('react-native');
-    return <Text>{`redirect:${href}`}</Text>;
-  },
-}));
+test('routes to /home when the pro entitlement is active', async () => {
+  (hasPro as jest.Mock).mockReturnValue(true);
+  render(<Index />);
+  await waitFor(() => expect(mockRedirect).toHaveBeenCalledWith({ href: '/home' }));
+  expect(initPurchases).toHaveBeenCalled();
+});
 
-describe('Index', () => {
-  it('redirects to onboarding when not complete', async () => {
-    (isOnboardingComplete as jest.Mock).mockResolvedValue(false);
-    const { findByText } = await render(<Index />);
-    expect(await findByText('redirect:/onboarding/01-aspiration')).toBeTruthy();
-  });
+test('routes to the paywall intro when onboarding is done but no entitlement', async () => {
+  (hasPro as jest.Mock).mockReturnValue(false);
+  (isOnboardingComplete as jest.Mock).mockResolvedValue(true);
+  render(<Index />);
+  await waitFor(() =>
+    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/10-paywall-intro' }),
+  );
+});
 
-  it('redirects to home when complete', async () => {
-    (isOnboardingComplete as jest.Mock).mockResolvedValue(true);
-    const { findByText } = await render(<Index />);
-    expect(await findByText('redirect:/home')).toBeTruthy();
-  });
+test('routes to onboarding start for a fresh user', async () => {
+  (hasPro as jest.Mock).mockReturnValue(false);
+  (isOnboardingComplete as jest.Mock).mockResolvedValue(false);
+  render(<Index />);
+  await waitFor(() =>
+    expect(mockRedirect).toHaveBeenCalledWith({ href: '/onboarding/01-aspiration' }),
+  );
 });
