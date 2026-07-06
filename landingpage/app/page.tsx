@@ -5,12 +5,10 @@ const GIFTS = [
   {
     num: "01",
     title: "A custom wallpaper with the lords scripture.",
-    body: "Calming verses over still water, sized for your phone's lock screen. A quiet word every time you look down.",
   },
   {
     num: "02",
     title: "Meet his word on your phone every day.",
-    body: "Spend more time getting closer to God.",
   },
 ];
 
@@ -25,12 +23,6 @@ export default function Home() {
             Quiet Waters
           </span>
         </div>
-        <a
-          href="#join"
-          className="font-grotesk text-xs font-semibold uppercase tracking-[0.12em] text-mist-deep no-underline"
-        >
-          Join the list
-        </a>
       </nav>
 
       {/* HERO */}
@@ -41,11 +33,11 @@ export default function Home() {
             A calm sanctuary for everyday faith
           </div>
           <h1 className="m-0 font-serif text-[clamp(44px,5.4vw,68px)] font-medium leading-[1.02] tracking-[0.005em] text-ink">
-            You want to feel closer to god.
+            See the Lord&apos;s scripture every day.
           </h1>
           <p className="mt-6 max-w-[30em] text-lg leading-[1.6] text-body">
-            You&apos;re not walking this path alone. Join Christians all over
-            the world drawing closer to God.
+            Free custom wallpapers with a daily Bible verse straight to your
+            inbox. Just enter your email to get your first one.
           </p>
 
           {/* FORM */}
@@ -108,8 +100,8 @@ export default function Home() {
               The Stillness Collection
             </h2>
             <p className="mt-3.5 text-base leading-[1.6] text-body">
-              A small, beautiful place to begin — landing in your inbox the
-              moment you join.
+              Custom wallpapers, each with a verse to draw you closer to God
+              throughout your day landing in your inbox the moment you join.
             </p>
           </div>
 
@@ -125,9 +117,6 @@ export default function Home() {
                 <div className="mb-2 font-serif text-[22px] font-medium text-ink">
                   {gift.title}
                 </div>
-                <p className="m-0 text-[14.5px] leading-[1.6] text-muted">
-                  {gift.body}
-                </p>
               </div>
             ))}
           </div>

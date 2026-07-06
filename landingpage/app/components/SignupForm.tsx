@@ -94,7 +94,7 @@ export default function SignupForm() {
           disabled={submitting}
           className="w-fit flex-none cursor-pointer rounded-[30px] border-none bg-slate px-7 py-4 text-[15px] font-semibold whitespace-nowrap text-[#eaf1f4] transition-colors hover:bg-ink"
         >
-          {submitting ? "Sending…" : "Get the Lord's Scripture"}
+          {submitting ? "Sending…" : "Get my free wallpaper"}
         </button>
       </form>
 
