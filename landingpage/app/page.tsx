@@ -4,18 +4,13 @@ import SignupForm from "./components/SignupForm";
 const GIFTS = [
   {
     num: "01",
-    title: "7 Scripture wallpapers",
+    title: "A custom wallpaper with the lords scripture.",
     body: "Calming verses over still water, sized for your phone's lock screen. A quiet word every time you look down.",
   },
   {
     num: "02",
-    title: "A 7-morning guide",
-    body: "One short reading, a verse and a prayer for each of seven mornings — a gentle rhythm to start the day.",
-  },
-  {
-    num: "03",
-    title: "A weekly word of rest",
-    body: "A gentle verse and reflection in your inbox each week — a quiet pause to come back to, nothing more.",
+    title: "Meet his word on your phone every day.",
+    body: "Spend more time getting closer to God.",
   },
 ];
 
@@ -46,19 +41,11 @@ export default function Home() {
             A calm sanctuary for everyday faith
           </div>
           <h1 className="m-0 font-serif text-[clamp(44px,5.4vw,68px)] font-medium leading-[1.02] tracking-[0.005em] text-ink">
-            Find a little
-            <br />
-            stillness, every
-            <br />
-            morning.
+            You want to feel closer to god.
           </h1>
           <p className="mt-6 max-w-[30em] text-lg leading-[1.6] text-body">
-            Quiet Waters is a gentle place for prayer, Scripture and rest. Join
-            the list and we&apos;ll send you{" "}
-            <strong className="font-semibold text-ink">
-              The Stillness Collection
-            </strong>
-            , free, to begin today.
+            You&apos;re not walking this path alone. Join Christians all over
+            the world drawing closer to God.
           </p>
 
           {/* FORM */}
@@ -166,7 +153,7 @@ export default function Home() {
           href="#join"
           className="mt-9 inline-block rounded-[30px] bg-water px-8 py-4 font-grotesk text-[15px] font-semibold leading-none text-ink no-underline transition-colors hover:bg-[#b4d2e0]"
         >
-          Join the list — it&apos;s free
+          Join the list it&apos;s free
         </a>
       </section>
 

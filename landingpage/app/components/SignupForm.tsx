@@ -33,7 +33,9 @@ export default function SignupForm() {
       posthog?.capture("signup_submitted");
       setSubmitted(true);
     } catch {
-      setError("Something went wrong on our end. Please try again in a moment.");
+      setError(
+        "Something went wrong on our end. Please try again in a moment.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -90,7 +92,7 @@ export default function SignupForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-fit flex-none cursor-pointer rounded-[30px] border-none bg-slate px-7 py-4 text-[15px] font-semibold whitespace-nowrap text-[#eaf1f4] transition-colors hover:bg-ink disabled:cursor-not-allowed disabled:opacity-70"
+          className="w-fit flex-none cursor-pointer rounded-[30px] border-none bg-slate px-7 py-4 text-[15px] font-semibold whitespace-nowrap text-[#eaf1f4] transition-colors hover:bg-ink"
         >
           {submitting ? "Sending…" : "Get the Lord's Scripture"}
         </button>
