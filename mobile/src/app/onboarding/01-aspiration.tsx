@@ -2,9 +2,15 @@ import { View, Image } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen, Eyebrow, ThemedText, Divider, CTAButton } from "@/components";
 import { spacing, colors } from "@/theme";
+import { useVariant } from "@/hooks/useVariant";
 
 export default function Aspiration() {
   const router = useRouter();
+  const headlineVariant = useVariant("aspiration-headline");
+  const headline =
+    headlineVariant === "v2"
+      ? "Draw nearer to God\neach day."
+      : "You want to feel\ncloser to God.";
   return (
     <Screen variant="light">
       <View
@@ -21,7 +27,7 @@ export default function Aspiration() {
         />
         <Eyebrow>A Place To Begin</Eyebrow>
         <ThemedText variant="title" align="center">
-          You want to feel{"\n"}closer to God.
+          {headline}
         </ThemedText>
         <Divider />
         <ThemedText variant="body" color={colors.textMuted} align="center">
