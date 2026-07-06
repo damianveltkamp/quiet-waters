@@ -4,7 +4,7 @@ const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn(), replace: mockReplace }) }));
 jest.mock('@/lib/storage', () => ({ setOnboardingComplete: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('expo-web-browser', () => ({ openBrowserAsync: jest.fn() }));
-jest.mock('@/hooks/useVariant', () => ({ useVariant: jest.fn(() => 'try_free') }));
+jest.mock('@/hooks/usePaywallContent', () => ({ usePaywallContent: jest.fn() }));
 
 const annual = { product: { priceString: '$59.99' } };
 const weekly = { product: { priceString: '$4.99' } };
@@ -17,13 +17,19 @@ jest.mock('@/lib/revenuecat', () => ({
 
 import { setOnboardingComplete } from '@/lib/storage';
 import { getCurrentOffering, purchasePackage, restore, hasPro } from '@/lib/revenuecat';
-import { useVariant } from '@/hooks/useVariant';
+import { usePaywallContent } from '@/hooks/usePaywallContent';
+import { DEFAULT_PAYWALL_CONTENT } from '@/lib/experiments';
 import Plans from '@/app/onboarding/12-paywall-plans';
+
+const contentWith = (overrides = {}) => ({
+  variant: 'a',
+  content: { ...DEFAULT_PAYWALL_CONTENT, ...overrides },
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
   (getCurrentOffering as jest.Mock).mockResolvedValue({ annual, weekly });
-  (useVariant as jest.Mock).mockReturnValue('try_free');
+  (usePaywallContent as jest.Mock).mockReturnValue(contentWith());
 });
 
 test('renders localized prices from the current offering', async () => {
@@ -38,10 +44,14 @@ test('yearly plan is selected by default', async () => {
   expect(screen.getByTestId('plan-card-yearly').props.accessibilityState.selected).toBe(true);
 });
 
-test('CTA copy follows the paywall-cta variant', async () => {
-  (useVariant as jest.Mock).mockReturnValue('start_trial');
+test('renders title, CTA, and yearly badge from the payload content', async () => {
+  (usePaywallContent as jest.Mock).mockReturnValue(
+    contentWith({ title: 'Variant B title', cta: 'Start my free trial', yearlyBadge: 'SAVE 90%' }),
+  );
   render(<Plans />);
   await waitFor(() => expect(screen.getByText('Start my free trial')).toBeTruthy());
+  expect(screen.getByText('Variant B title')).toBeTruthy();
+  expect(screen.getByText('SAVE 90%')).toBeTruthy();
 });
 
 test('successful purchase persists flag and routes home', async () => {

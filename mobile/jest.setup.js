@@ -21,4 +21,5 @@ jest.mock('posthog-react-native', () => ({
   PostHogProvider: ({ children }) => children,
   usePostHog: () => ({ identify: jest.fn(), capture: jest.fn() }),
   useFeatureFlag: () => undefined,
+  useFeatureFlagWithPayload: () => [undefined, undefined],
 }));
