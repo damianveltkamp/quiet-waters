@@ -17,7 +17,7 @@ jest.mock('react-native-purchases', () => ({
 }));
 
 jest.mock('posthog-react-native', () => ({
-  PostHog: jest.fn().mockImplementation(() => ({ identify: jest.fn(), capture: jest.fn() })),
+  PostHog: jest.fn().mockImplementation(() => ({ identify: jest.fn(), capture: jest.fn(), register: jest.fn() })),
   PostHogProvider: ({ children }) => children,
   usePostHog: () => ({ identify: jest.fn(), capture: jest.fn() }),
   useFeatureFlag: () => undefined,
