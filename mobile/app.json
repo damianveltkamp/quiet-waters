@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.anonymous.mobile"
+      "bundleIdentifier": "com.quietwaters.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,6 +36,11 @@
       ],
       "expo-font"
     ],
+    "extra": {
+      "revenueCatIosKey": "appl_PLACEHOLDER",
+      "posthogKey": "phc_PLACEHOLDER",
+      "posthogHost": "https://eu.i.posthog.com"
+    },
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
