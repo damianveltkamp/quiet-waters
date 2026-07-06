@@ -14,7 +14,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   );
 
   return (
-    <PostHogProvider client={client} autocapture debug={__DEV__}>
+    <PostHogProvider client={client} autocapture>
       {children}
     </PostHogProvider>
   );
