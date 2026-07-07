@@ -36,11 +36,11 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="wallpaper-verse-picker"
-            options={{ presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.6, 0.95] }}
+            options={{ presentation: 'modal' }}
           />
           <Stack.Screen
             name="wallpaper-backgrounds"
-            options={{ presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.6, 0.95] }}
+            options={{ presentation: 'modal' }}
           />
         </Stack>
       </AppProviders>

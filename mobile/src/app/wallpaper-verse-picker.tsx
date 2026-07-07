@@ -35,6 +35,11 @@ export default function VersePicker() {
 
   const books = getBooks().filter((b) => b.testament === testament);
 
+  const heading =
+    step === 'chapter' && book ? `${book.name} · choose a chapter`
+    : step === 'verse' && book && chapter ? `${book.name} ${chapter} · choose a verse`
+    : 'Choose a book';
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.surface, padding: spacing.lg, gap: spacing.md }}>
       {/* Search + Surprise + translation */}
@@ -79,20 +84,27 @@ export default function VersePicker() {
         ))}
       </View>
 
-      {step !== 'book' && (
-        <Pressable
-          accessibilityLabel="Back"
-          onPress={() => {
-            if (step === 'verse') setStep('chapter');
-            else if (step === 'chapter') setStep('book');
-          }}
-          style={{ alignSelf: 'flex-start', paddingVertical: spacing.sm, paddingHorizontal: spacing.md }}
-        >
-          <ThemedText variant="caption" color={colors.primary}>‹ Back</ThemedText>
-        </Pressable>
-      )}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+        {step !== 'book' && (
+          <Pressable
+            accessibilityLabel="Back"
+            onPress={() => {
+              if (step === 'verse') setStep('chapter');
+              else if (step === 'chapter') setStep('book');
+            }}
+            hitSlop={8}
+          >
+            <ThemedText variant="caption" color={colors.primary}>‹ Back</ThemedText>
+          </Pressable>
+        )}
+        <ThemedText variant="eyebrow" color={colors.textFaint}>{heading}</ThemedText>
+      </View>
 
-      <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}
+        keyboardShouldPersistTaps="handled"
+      >
         {step === 'book' && books.map((b) => (
           <Cell key={b.code} label={b.name} onPress={() => { setBook(b); setStep('chapter'); }} />
         ))}

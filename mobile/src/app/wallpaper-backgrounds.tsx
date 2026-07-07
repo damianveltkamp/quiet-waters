@@ -23,7 +23,11 @@ export default function BackgroundsSheet() {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}
+        keyboardShouldPersistTaps="handled"
+      >
         {BACKGROUNDS.map((bg) => {
           const selected = bg.id === background.id;
           return (
