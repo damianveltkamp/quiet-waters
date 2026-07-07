@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Svg, { Path, Rect } from 'react-native-svg';
+import Svg, { Rect } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { ThemedText, Toast } from '@/components';
 import { colors, spacing } from '@/theme';
@@ -16,17 +16,24 @@ export default function Create() {
   const canvasRef = useRef<View>(null);
   const [toast, setToast] = useState(false);
   const [hint, setHint] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   async function onSave() {
-    const result = await saveWallpaperToPhotos(canvasRef);
-    if (result === 'saved') {
-      successFeedback();
-      setHint('Set it via Settings › Wallpaper.');
-      setToast(true);
-    } else if (result === 'denied') {
-      setHint('Enable Photos access in Settings to save.');
-    } else {
-      setHint("Couldn't save wallpaper. Please try again.");
+    if (saving) return;
+    setSaving(true);
+    try {
+      const result = await saveWallpaperToPhotos(canvasRef);
+      if (result === 'saved') {
+        successFeedback();
+        setHint('Set it via Settings › Wallpaper.');
+        setToast(true);
+      } else if (result === 'denied') {
+        setHint('Enable Photos access in Settings to save.');
+      } else {
+        setHint("Couldn't save wallpaper. Please try again.");
+      }
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -39,7 +46,7 @@ export default function Create() {
 
       <SafeAreaView style={{ flex: 1, justifyContent: 'flex-end' }}>
         <View style={{ padding: spacing.lg, gap: spacing.sm }}>
-          {hint && <ThemedText variant="caption" color={colors.white} align="center">{hint}</ThemedText>}
+          {hint && <ThemedText variant="caption" color={background.textColor} align="center">{hint}</ThemedText>}
           {toast && <Toast message="Wallpaper saved" visible={toast} onHide={() => setToast(false)} />}
 
           <View style={{ flexDirection: 'row', gap: spacing.sm }}>
@@ -65,6 +72,7 @@ export default function Create() {
 
           <Pressable
             onPress={onSave}
+            disabled={saving}
             style={({ pressed }) => ({ backgroundColor: colors.white, opacity: pressed ? 0.9 : 1, borderRadius: 999, paddingVertical: spacing.md + 2, alignItems: 'center' })}
           >
             <ThemedText variant="button" color={colors.primary}>Set as wallpaper</ThemedText>

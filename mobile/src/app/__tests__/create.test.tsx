@@ -37,3 +37,11 @@ test('denied permission shows a hint, not the toast', async () => {
   await waitFor(() => expect(screen.getByText(/Enable Photos access/)).toBeOnTheScreen());
   expect(screen.queryByText('Wallpaper saved')).toBeNull();
 });
+
+test('save error shows a hint, not the toast', async () => {
+  mockSave.mockResolvedValue('error');
+  await render(<Create />);
+  await fireEvent.press(screen.getByText('Set as wallpaper'));
+  await waitFor(() => expect(screen.getByText(/Couldn't save wallpaper/)).toBeOnTheScreen());
+  expect(screen.queryByText('Wallpaper saved')).toBeNull();
+});
