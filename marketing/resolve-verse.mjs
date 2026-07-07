@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 const REF_RE = /^([1-3]?[A-Za-z]{2,3})\s+(\d+):(\d+)(?:-(\d+))?$/;
 
 export function parseRef(ref) {
@@ -35,4 +38,21 @@ export function resolveVerse(ref, book) {
   const versePart = vEnd > vStart ? `${vStart}-${vEnd}` : `${vStart}`;
   const label = `${book.name} ${chapter}:${versePart}`.toUpperCase();
   return { text, label };
+}
+
+const _bookCache = new Map();
+
+export function loadBook(bookCode, kjvDir) {
+  const key = `${kjvDir}::${bookCode}`;
+  if (_bookCache.has(key)) return _bookCache.get(key);
+  const path = join(kjvDir, `${bookCode}.json`);
+  let raw;
+  try {
+    raw = readFileSync(path, "utf8");
+  } catch {
+    throw new Error(`Unknown book code "${bookCode}" (no file at ${path})`);
+  }
+  const book = JSON.parse(raw);
+  _bookCache.set(key, book);
+  return book;
 }
