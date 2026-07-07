@@ -15,3 +15,24 @@ export function parseRef(ref) {
   }
   return { bookCode, chapter, vStart, vEnd };
 }
+
+export function resolveVerse(ref, book) {
+  const { bookCode, chapter, vStart, vEnd } = parseRef(ref);
+  const chapters = book.chapters || [];
+  const chapterArr = chapters[chapter - 1];
+  if (!Array.isArray(chapterArr)) {
+    throw new Error(`${bookCode}: chapter ${chapter} does not exist`);
+  }
+  const parts = [];
+  for (let v = vStart; v <= vEnd; v++) {
+    const verseText = chapterArr[v - 1];
+    if (typeof verseText !== "string") {
+      throw new Error(`${bookCode} ${chapter}: verse ${v} does not exist`);
+    }
+    parts.push(verseText.trim());
+  }
+  const text = parts.join(" ").replace(/\s+/g, " ").trim();
+  const versePart = vEnd > vStart ? `${vStart}-${vEnd}` : `${vStart}`;
+  const label = `${book.name} ${chapter}:${versePart}`.toUpperCase();
+  return { text, label };
+}
