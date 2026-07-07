@@ -79,6 +79,19 @@ export default function VersePicker() {
         ))}
       </View>
 
+      {step !== 'book' && (
+        <Pressable
+          accessibilityLabel="Back"
+          onPress={() => {
+            if (step === 'verse') setStep('chapter');
+            else if (step === 'chapter') setStep('book');
+          }}
+          style={{ alignSelf: 'flex-start', paddingVertical: spacing.sm, paddingHorizontal: spacing.md }}
+        >
+          <ThemedText variant="caption" color={colors.primary}>‹ Back</ThemedText>
+        </Pressable>
+      )}
+
       <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
         {step === 'book' && books.map((b) => (
           <Cell key={b.code} label={b.name} onPress={() => { setBook(b); setStep('chapter'); }} />

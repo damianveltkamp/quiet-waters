@@ -47,4 +47,12 @@ test('invalid search shows not-found feedback and does not close', async () => {
   await fireEvent.changeText(screen.getByPlaceholderText('Search a verse'), 'Nowhere 9:9');
   await fireEvent(screen.getByPlaceholderText('Search a verse'), 'submitEditing');
   expect(screen.getByText('Verse not found')).toBeOnTheScreen();
+  expect(mockBack).not.toHaveBeenCalled();
+});
+
+test('Back affordance pops one drill-down step to the book grid', async () => {
+  await render(<VersePicker />);
+  await fireEvent.press(screen.getByText('Matthew')); // enters chapter step
+  await fireEvent.press(screen.getByLabelText('Back'));
+  expect(screen.getByText('Matthew')).toBeOnTheScreen(); // book grid is back
 });
