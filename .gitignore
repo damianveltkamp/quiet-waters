@@ -4,3 +4,7 @@
 
 # Superpowers SDD scratch
 .superpowers/
+
+# Claude Code local
+.claude/settings.local.json
+.claude/worktrees/
