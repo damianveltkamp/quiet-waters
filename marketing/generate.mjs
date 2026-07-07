@@ -51,9 +51,26 @@ for (const { id, ref } of verses) {
 
 const templateUrl = pathToFileURL(join(ROOT, "post-template.html")).href;
 
+// Missing background or font file: abort with the missing path.
+const REQUIRED_FILES = [
+  ...BACKGROUNDS.map((bg) => bg.file),
+  "post-template.html",
+  "assets/fonts/CormorantGaramond_600SemiBold.ttf",
+  "assets/fonts/CormorantGaramond_500Medium_Italic.ttf",
+  "assets/fonts/HankenGrotesk_600SemiBold.ttf",
+  "assets/fonts/HankenGrotesk_400Regular.ttf",
+];
+for (const file of REQUIRED_FILES) {
+  const filePath = join(ROOT, file);
+  if (!existsSync(filePath)) {
+    console.error(`Missing required asset: ${filePath}`);
+    process.exit(1);
+  }
+}
+
 const browser = await puppeteer.launch({
   executablePath,
-  headless: "new",
+  headless: true,
   args: ["--hide-scrollbars", "--force-color-profile=srgb"],
 });
 

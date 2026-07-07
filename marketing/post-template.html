@@ -98,9 +98,20 @@
 
     // Wait for fonts and the two swapped images to be ready.
     await document.fonts.ready;
-    await Promise.all([...document.images].map((img) =>
-      img.complete ? Promise.resolve() : new Promise((r) => { img.onload = img.onerror = r; })
-    ));
+    const bgImg = document.getElementById("bg");
+    await Promise.all([...document.images].map((img) => {
+      if (img.complete) return Promise.resolve();
+      return new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => {
+          if (img === bgImg) {
+            reject(new Error("Failed to load background image: " + img.src));
+          } else {
+            resolve();
+          }
+        };
+      });
+    }));
 
     // Auto-fit: shrink verse font-size until the content column height fits
     // within a max fraction of the stage, so short and long verses both center.
