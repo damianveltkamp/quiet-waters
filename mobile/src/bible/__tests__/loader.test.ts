@@ -31,3 +31,10 @@ test('out-of-range lookups return undefined / empty array', () => {
   expect(getChapter('BSB', 'JHN', 99)).toEqual([]);
   expect(getChapter('BSB', 'ZZZ', 1)).toEqual([]);
 });
+
+test('empty-string verse (BSB textual variant) returns undefined', () => {
+  // BSB omits this textual-variant verse (empty string in data) -> undefined.
+  expect(getVerse('BSB', 'MAT', 17, 21)).toBeUndefined();
+  // KJV retains it, as a contrast.
+  expect(getVerse('KJV', 'MAT', 17, 21)?.text.length).toBeGreaterThan(0);
+});
