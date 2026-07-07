@@ -34,7 +34,15 @@
           "imageWidth": 76
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Quiet Waters saves your wallpapers to Photos.",
+          "savePhotosPermission": "Quiet Waters saves your wallpapers to Photos.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ]
     ],
     "extra": {
       "revenueCatIosKey": "test_zPnhwfAvZwCFKBftbZQlHbMewgd",

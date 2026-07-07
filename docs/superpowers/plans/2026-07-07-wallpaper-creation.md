@@ -111,8 +111,10 @@ Expected: type check passes; existing test suite is green.
 
 - [ ] **Step 5: Commit**
 
+Note: this repo intentionally gitignores `mobile/ios` (`/ios` in `mobile/.gitignore`) — the native project is regenerated from `app.json` via `expo prebuild` and is NOT tracked. Commit only the config files; do not force-add the generated `ios/` tree.
+
 ```bash
-git add mobile/package.json mobile/package-lock.json mobile/app.json mobile/ios
+git add mobile/package.json mobile/package-lock.json mobile/app.json
 git commit -m "chore(wallpaper): add view-shot + media-library deps and native config"
 ```
 

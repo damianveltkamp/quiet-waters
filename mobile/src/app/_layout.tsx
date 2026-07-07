@@ -33,7 +33,16 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AppProviders>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="wallpaper-verse-picker"
+            options={{ presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.6, 0.95] }}
+          />
+          <Stack.Screen
+            name="wallpaper-backgrounds"
+            options={{ presentation: 'formSheet', sheetGrabberVisible: true, sheetAllowedDetents: [0.6, 0.95] }}
+          />
+        </Stack>
       </AppProviders>
     </SafeAreaProvider>
   );
