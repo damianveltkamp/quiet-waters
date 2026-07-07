@@ -52,13 +52,11 @@
   }
   #logo {
     display: flex; flex-direction: column; align-items: center;
-    margin-top: 72px;
+    margin-top: 64px;
   }
-  #logo img { width: 84px; height: 84px; }
   #wordmark {
-    font-family: "Hanken Grotesk", sans-serif; font-weight: 600;
-    font-size: 20px; letter-spacing: 5px; text-transform: uppercase;
-    margin-top: 14px;
+    font-family: "Cormorant Garamond", serif; font-weight: 600;
+    font-size: 30px; letter-spacing: 4px; text-transform: uppercase;
   }
   /* Light theme colors */
   body.light #verse, body.light #label, body.light #wordmark { color: #1C3344; }
@@ -77,22 +75,15 @@
       <div id="divider"></div>
       <div id="label"></div>
       <div id="logo">
-        <img id="logo-mark" alt="" />
-        <div id="wordmark">Quiet Waters</div>
+        <div id="wordmark">Faith Daily</div>
       </div>
     </div>
   </div>
 <script>
-  const LOGO = {
-    light: "assets/quiet-waters-symbol-slate-transparent-1024.png",
-    dark: "assets/quiet-waters-symbol-white-transparent-1024.png",
-  };
-
   window.renderPost = async function ({ verseText, label, theme, background }) {
     window.__fitDone = false;
     document.body.className = theme;
     document.getElementById("bg").src = background;
-    document.getElementById("logo-mark").src = LOGO[theme];
     document.getElementById("verse").textContent = "“" + verseText + "”";
     document.getElementById("label").textContent = label;
 
