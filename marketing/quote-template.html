@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("assets/fonts/CormorantGaramond_600SemiBold.ttf") format("truetype");
+    font-weight: 600; font-style: normal;
+  }
+  @font-face {
+    font-family: "Hanken Grotesk";
+    src: url("assets/fonts/HankenGrotesk_600SemiBold.ttf") format("truetype");
+    font-weight: 600; font-style: normal;
+  }
+  @font-face {
+    font-family: "Hanken Grotesk";
+    src: url("assets/fonts/HankenGrotesk_400Regular.ttf") format("truetype");
+    font-weight: 400; font-style: normal;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; background: #0a0a0a; }
+
+  #stage {
+    position: relative; width: 1080px; height: 1350px;
+    background: #0a0a0a;
+    display: flex; flex-direction: column;
+  }
+
+  /* --- Top: subject photo --- */
+  #photo-wrap {
+    position: relative; width: 1080px; height: 760px;
+    overflow: hidden; flex: 0 0 auto;
+  }
+  #photo {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center 30%;
+  }
+  /* Fade the bottom of the photo into the black panel. */
+  #photo-fade {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to bottom,
+      rgba(10,10,10,0) 55%, rgba(10,10,10,0.85) 88%, #0a0a0a 100%);
+  }
+
+  /* --- Center badge straddling the seam --- */
+  #badge-row {
+    position: relative; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; margin-top: -34px;
+  }
+  #badge-row .rule { width: 90px; height: 3px; background: #ffffff; opacity: 0.9; }
+  #badge {
+    width: 68px; height: 68px; border-radius: 50%;
+    background: #12233a; border: 3px solid #f2b705;
+    display: flex; align-items: center; justify-content: center;
+    color: #f2b705; font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 600; font-size: 26px; letter-spacing: 1px;
+  }
+
+  /* --- Bottom: quote panel --- */
+  #panel {
+    flex: 1 1 auto; min-height: 0; overflow: hidden; background: #0a0a0a;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px 70px 40px;
+    text-align: center;
+  }
+  #quote {
+    font-family: "Cormorant Garamond", serif; font-weight: 600;
+    font-size: 52px; line-height: 1.16; letter-spacing: 0.5px;
+    text-transform: uppercase; color: #ffffff;
+    font-feature-settings: "lnum" 1; /* lining figures for all-caps numbers */
+  }
+  #quote .gold { color: #f2b705; }
+  #attribution {
+    font-family: "Cormorant Garamond", serif; font-weight: 600;
+    font-size: 52px; line-height: 1.16; letter-spacing: 0.5px;
+    text-transform: uppercase; color: #ffffff; margin-top: 2px;
+    font-feature-settings: "lnum" 1;
+  }
+  #handle {
+    font-family: "Hanken Grotesk", sans-serif; font-weight: 400;
+    font-size: 20px; letter-spacing: 3px; text-transform: uppercase;
+    color: #8a8f96; margin-top: 26px;
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div id="photo-wrap">
+      <img id="photo" alt="" />
+      <div id="photo-fade"></div>
+    </div>
+    <div id="badge-row">
+      <div class="rule"></div>
+      <div id="badge">FD</div>
+      <div class="rule"></div>
+    </div>
+    <div id="panel">
+      <div id="quote"></div>
+      <div id="attribution"></div>
+      <div id="handle"></div>
+    </div>
+  </div>
+<script>
+  // Convert **gold phrase** markup into gold spans, escaping everything else so
+  // quote text can't inject markup. Splitting on the capture group puts the
+  // highlighted chunks on the odd indices of the resulting array.
+  function renderMarkup(raw) {
+    const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return raw
+      .split(/\*\*(.+?)\*\*/gs)
+      .map((part, i) => (i % 2 === 1 ? '<span class="gold">' + esc(part) + "</span>" : esc(part)))
+      .join("");
+  }
+
+  window.renderPost = async function ({ quote, attribution, handle, photo }) {
+    document.getElementById("photo").src = photo;
+    document.getElementById("quote").innerHTML = renderMarkup(quote);
+    document.getElementById("attribution").textContent = attribution ? "–" + attribution.toUpperCase() : "";
+    document.getElementById("handle").textContent = handle || "";
+
+    await document.fonts.ready;
+    const photoImg = document.getElementById("photo");
+    await new Promise((resolve, reject) => {
+      if (photoImg.complete && photoImg.naturalWidth) return resolve();
+      photoImg.onload = resolve;
+      photoImg.onerror = () => reject(new Error("Failed to load photo: " + photoImg.src));
+    });
+
+    // Auto-fit: shrink quote + attribution together until the panel content
+    // fits, so short and long quotes both stay centered in the black panel.
+    const panel = document.getElementById("panel");
+    const quoteEl = document.getElementById("quote");
+    const attrEl = document.getElementById("attribution");
+    const handleEl = document.getElementById("handle");
+    const MAX_H = panel.clientHeight - 40;
+    let size = 52;
+    const apply = (s) => { quoteEl.style.fontSize = s + "px"; attrEl.style.fontSize = s + "px"; };
+    const contentH = () => quoteEl.offsetHeight + attrEl.offsetHeight + handleEl.offsetHeight;
+    apply(size);
+    while (contentH() > MAX_H && size > 22) {
+      size -= 2;
+      apply(size);
+    }
+    return { size, overflow: contentH() > MAX_H };
+  };
+</script>
+</body>
+</html>

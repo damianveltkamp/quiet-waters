@@ -6,6 +6,7 @@
   "description": "Renders curated KJV verses onto Quiet Waters backgrounds as 1080x1350 social PNGs.",
   "scripts": {
     "generate": "node generate.mjs",
+    "generate:quotes": "node generate-quotes.mjs",
     "test": "node --test"
   },
   "dependencies": {
