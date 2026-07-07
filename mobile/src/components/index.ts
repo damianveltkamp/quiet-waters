@@ -10,3 +10,4 @@ export { NotificationPreview } from './NotificationPreview';
 export { PlaceholderBox } from './PlaceholderBox';
 export { PlanCard } from './PlanCard';
 export { TimelineStep } from './TimelineStep';
+export { VerseCard } from './VerseCard';
