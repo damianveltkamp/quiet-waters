@@ -5,26 +5,26 @@ import { saveWallpaperToPhotos } from '@/features/wallpaper/export';
 jest.mock('react-native-view-shot', () => ({ captureRef: jest.fn() }));
 jest.mock('expo-media-library', () => ({
   requestPermissionsAsync: jest.fn(),
-  saveToLibraryAsync: jest.fn(),
+  Asset: { create: jest.fn() },
 }));
 
 import { captureRef } from 'react-native-view-shot';
-import { requestPermissionsAsync, saveToLibraryAsync } from 'expo-media-library';
+import { requestPermissionsAsync, Asset } from 'expo-media-library';
 
 const mockCapture = captureRef as jest.Mock;
 const mockPerm = requestPermissionsAsync as jest.Mock;
-const mockSave = saveToLibraryAsync as jest.Mock;
+const mockCreate = Asset.create as jest.Mock;
 
 beforeEach(() => {
   mockCapture.mockReset();
   mockPerm.mockReset();
-  mockSave.mockReset();
+  mockCreate.mockReset();
 });
 
-test('captures then saves when permission granted', async () => {
+test('captures then creates an asset when permission granted', async () => {
   mockPerm.mockResolvedValue({ status: 'granted' });
   mockCapture.mockResolvedValue('file:///tmp/wall.png');
-  mockSave.mockResolvedValue(undefined);
+  mockCreate.mockResolvedValue({ id: 'asset-1' });
 
   const ref = createRef<View>();
   const result = await saveWallpaperToPhotos(ref);
@@ -32,7 +32,7 @@ test('captures then saves when permission granted', async () => {
   expect(result).toBe('saved');
   expect(mockPerm).toHaveBeenCalledWith(true); // write-only
   expect(mockCapture).toHaveBeenCalledWith(ref, { format: 'png' });
-  expect(mockSave).toHaveBeenCalledWith('file:///tmp/wall.png');
+  expect(mockCreate).toHaveBeenCalledWith('file:///tmp/wall.png');
 });
 
 test('returns denied and never captures when permission refused', async () => {
@@ -42,7 +42,7 @@ test('returns denied and never captures when permission refused', async () => {
 
   expect(result).toBe('denied');
   expect(mockCapture).not.toHaveBeenCalled();
-  expect(mockSave).not.toHaveBeenCalled();
+  expect(mockCreate).not.toHaveBeenCalled();
 });
 
 test('returns error when capture throws', async () => {
@@ -52,5 +52,5 @@ test('returns error when capture throws', async () => {
   const result = await saveWallpaperToPhotos(createRef<View>());
 
   expect(result).toBe('error');
-  expect(mockSave).not.toHaveBeenCalled();
+  expect(mockCreate).not.toHaveBeenCalled();
 });

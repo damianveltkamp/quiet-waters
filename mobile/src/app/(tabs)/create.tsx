@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Rect } from 'react-native-svg';
 import { useRouter } from 'expo-router';
@@ -17,6 +17,11 @@ export default function Create() {
   const [toast, setToast] = useState(false);
   const [hint, setHint] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  // Capture at the true full-screen size so the exported image matches the
+  // device wallpaper aspect ratio. The tab screen is shorter than the screen
+  // (it sits above the tab bar), so StyleSheet.absoluteFill would crop it and
+  // the centered text would land off-center once iOS fills the lock screen.
+  const screen = Dimensions.get('screen');
 
   async function onSave() {
     if (saving) return;
@@ -39,8 +44,14 @@ export default function Create() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Capture target: full-bleed canvas. collapsable={false} keeps a native view for view-shot. */}
-      <View ref={canvasRef} collapsable={false} style={StyleSheet.absoluteFill}>
+      {/* Capture target: sized to the full device screen (not the tab-cropped
+          area) so the exported PNG has the wallpaper aspect ratio. It extends
+          behind the opaque tab bar. collapsable={false} keeps a native view for view-shot. */}
+      <View
+        ref={canvasRef}
+        collapsable={false}
+        style={{ position: 'absolute', top: 0, left: 0, width: screen.width, height: screen.height }}
+      >
         <WallpaperCanvas verseText={verse.text} reference={verse.reference} background={background} />
       </View>
 
