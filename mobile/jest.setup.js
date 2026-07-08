@@ -27,10 +27,10 @@ jest.mock('posthog-react-native', () => ({
 jest.mock('react-native-mmkv', () => {
   const store = new Map();
   return {
-    MMKV: jest.fn().mockImplementation(() => ({
+    createMMKV: jest.fn(() => ({
       getString: (k) => (store.has(k) ? store.get(k) : undefined),
       set: (k, v) => store.set(k, String(v)),
-      delete: (k) => store.delete(k),
+      remove: (k) => store.delete(k),
       clearAll: () => store.clear(),
     })),
   };
