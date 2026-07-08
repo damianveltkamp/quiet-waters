@@ -1,4 +1,6 @@
 node_modules/
 out/
 out-quotes/
+feed-images/
+candidates.json
 .DS_Store

@@ -1,0 +1,9 @@
+{
+  "feeds": [
+    { "name": "Relevant Magazine", "url": "https://relevantmagazine.com/feed/" },
+    { "name": "God Reports", "url": "https://godreports.com/feed/" },
+    { "name": "Christian Post", "url": "https://www.christianpost.com/rss" },
+    { "name": "CBN News", "url": "https://www1.cbn.com/rss.xml" },
+    { "name": "Christian Headlines", "url": "https://www.christianheadlines.com/rss/" }
+  ]
+}

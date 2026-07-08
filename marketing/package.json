@@ -7,9 +7,12 @@
   "scripts": {
     "generate": "node generate.mjs",
     "generate:quotes": "node generate-quotes.mjs",
+    "fetch": "node fetch-feeds.mjs",
     "test": "node --test"
   },
   "dependencies": {
-    "puppeteer-core": "^24.0.0"
+    "image-size": "^2.0.2",
+    "puppeteer-core": "^24.0.0",
+    "rss-parser": "^3.13.0"
   }
 }
