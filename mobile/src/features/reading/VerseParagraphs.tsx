@@ -25,7 +25,7 @@ interface VerseParagraphsProps {
   liftedVerse: number | null;
   fontFace: FontFace;
   fontScale: number;
-  onLongPressVerse: (verseNumber: number, pageY: number) => void;
+  onLongPressVerse: (verseNumber: number) => void;
   onVerseLayout: (verseNumber: number, y: number) => void;
 }
 
@@ -64,7 +64,7 @@ export default function VerseParagraphs({
           <Pressable
             key={v.number}
             testID={`verse-${v.number}`}
-            onLongPress={(e) => onLongPressVerse(v.number, e?.nativeEvent?.pageY ?? 0)}
+            onLongPress={() => onLongPressVerse(v.number)}
             onLayout={(e: LayoutChangeEvent) => onVerseLayout(v.number, e.nativeEvent.layout.y)}
             style={
               lifted

@@ -46,7 +46,7 @@ test('tapping the book pill opens the book picker; choosing a book opens its cha
 
 test('long-pressing a verse opens the action menu; Create wallpaper navigates to Create tab', async () => {
   await render(<ReadingScreen />);
-  await fireEvent(screen.getByTestId('verse-16'), 'longPress', { nativeEvent: { pageY: 300 } });
+  await fireEvent(screen.getByTestId('verse-16'), 'longPress');
   await fireEvent.press(screen.getByText('Create wallpaper'));
   expect(mockPush).toHaveBeenCalledWith('/(tabs)/create');
 });
