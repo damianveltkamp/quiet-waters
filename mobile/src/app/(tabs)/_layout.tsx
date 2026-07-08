@@ -29,6 +29,15 @@ function YouIcon({ color }: { color: ColorValue }) {
   );
 }
 
+function ReadIcon({ color }: { color: ColorValue }) {
+  return (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 6c-1.8-1.2-4.2-2-6.5-2H3v14h2.5c2.3 0 4.7.8 6.5 2 1.8-1.2 4.2-2 6.5-2H21V4h-2.5C16.2 4 13.8 4.8 12 6Z" stroke={color} strokeWidth={1.8} strokeLinejoin="round" />
+      <Path d="M12 6v14" stroke={color} strokeWidth={1.8} />
+    </Svg>
+  );
+}
+
 export default function TabsLayout() {
   return (
     <Tabs
@@ -43,6 +52,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="home" options={{ title: 'Today', tabBarIcon: ({ color }) => <HomeIcon color={color} /> }} />
       <Tabs.Screen name="create" options={{ title: 'Create', tabBarIcon: ({ color }) => <CreateIcon color={color} /> }} />
       <Tabs.Screen name="you" options={{ title: 'You', tabBarIcon: ({ color }) => <YouIcon color={color} /> }} />
+      <Tabs.Screen name="read" options={{ title: 'Read', tabBarIcon: ({ color }) => <ReadIcon color={color} /> }} />
     </Tabs>
   );
 }
