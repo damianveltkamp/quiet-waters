@@ -3,7 +3,6 @@ import { ThemedText } from '@/components';
 import { colors, spacing } from '@/theme';
 
 interface Props {
-  bookCode: string;
   bookName: string;
   chapterCount: number;
   currentChapter: number;

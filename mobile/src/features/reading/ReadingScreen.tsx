@@ -48,10 +48,13 @@ export default function ReadingScreen() {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // On chapter change, lift the saved verse again and scroll to it once laid out.
+  // This is the convergence point for chapter/book/translation/hydration changes,
+  // so it also clears the stale verse->y offsets map before verses re-lay-out.
   useEffect(() => {
+    offsets.current.clear();
     setLifted(position.verse);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [position.bookCode, position.chapter]);
+  }, [position.bookCode, position.chapter, translation]);
 
   // Clear any pending debounced save on unmount.
   useEffect(() => () => { if (saveTimer.current) clearTimeout(saveTimer.current); }, []);
@@ -65,7 +68,6 @@ export default function ReadingScreen() {
 
   function onScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
     const y = e.nativeEvent.contentOffset.y;
-    if (lifted !== null && y > 8) setLifted(null); // "floats, then fades"
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       const sorted = [...offsets.current.entries()].map(([number, oy]) => ({ number, y: oy })).sort((a, b) => a.y - b.y);
@@ -93,7 +95,14 @@ export default function ReadingScreen() {
         <Pill label="Aa" onPress={() => setOverlay('type')} />
       </View>
 
-      <ScrollView ref={scrollRef} onScroll={onScroll} scrollEventThrottle={16} contentContainerStyle={{ padding: spacing.lg, paddingBottom: 120 }}>
+      <ScrollView
+        ref={scrollRef}
+        testID="reading-scroll"
+        onScroll={onScroll}
+        onScrollBeginDrag={() => setLifted(null)}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ padding: spacing.lg, paddingBottom: 120 }}
+      >
         <ThemedText variant="eyebrow" color={colors.soft} style={{ marginBottom: spacing.md }}>
           {translation === 'KJV' ? 'King James Version' : 'Berean Standard Bible'}
         </ThemedText>
@@ -137,7 +146,6 @@ export default function ReadingScreen() {
       {overlay === 'chapter' && (
         <View style={{ position: 'absolute', left: spacing.md, right: spacing.md, top: 72 }}>
           <ChapterPickerOverlay
-            bookCode={book.code}
             bookName={book.name}
             chapterCount={book.chapterCount}
             currentChapter={position.chapter}

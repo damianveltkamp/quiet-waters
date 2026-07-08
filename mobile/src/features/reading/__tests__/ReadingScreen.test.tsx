@@ -1,4 +1,4 @@
-import { render, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { act, render, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import ReadingScreen from '@/features/reading/ReadingScreen';
 import { useReadingStore } from '@/features/reading/readingStore';
 
@@ -13,6 +13,10 @@ beforeEach(() => {
     fontScale: 1,
     fontFace: 'serif',
   });
+});
+
+afterEach(() => {
+  jest.useRealTimers();
 });
 
 test('renders the current book, chapter and translation in the chrome', async () => {
@@ -44,4 +48,54 @@ test('next arrow advances to the following chapter in the store', async () => {
   await render(<ReadingScreen />);
   await fireEvent.press(screen.getByTestId('reading-next'));
   expect(useReadingStore.getState().position).toEqual({ bookCode: 'JHN', chapter: 4, verse: 1 });
+});
+
+test('debounced scroll save resolves to the topmost visible verse after layout', async () => {
+  // Capture the debounce timer instead of globally faking timers: full fake-timer mode
+  // interferes with React Native's scheduler across subsequent tests in this file.
+  const timeoutSpy = jest.spyOn(globalThis, 'setTimeout');
+  await render(<ReadingScreen />);
+
+  // Lay out several verses at distinct y offsets.
+  await fireEvent(screen.getByTestId('verse-14'), 'layout', { nativeEvent: { layout: { y: 0 } } });
+  await fireEvent(screen.getByTestId('verse-15'), 'layout', { nativeEvent: { layout: { y: 100 } } });
+  await fireEvent(screen.getByTestId('verse-16'), 'layout', { nativeEvent: { layout: { y: 200 } } });
+  await fireEvent(screen.getByTestId('verse-17'), 'layout', { nativeEvent: { layout: { y: 300 } } });
+
+  // Scroll so verse-16 (y=200) is the topmost visible verse.
+  await fireEvent(screen.getByTestId('reading-scroll'), 'scroll', {
+    nativeEvent: { contentOffset: { y: 210 } },
+  });
+
+  const debounceCall = timeoutSpy.mock.calls.find((call) => call[1] === 400);
+  expect(debounceCall).toBeTruthy();
+  await act(async () => { (debounceCall![0] as () => void)(); });
+
+  expect(useReadingStore.getState().position.verse).toBe(16);
+  timeoutSpy.mockRestore();
+});
+
+test('lift on entry survives a programmatic scroll but clears once the user starts dragging', async () => {
+  await render(<ReadingScreen />);
+
+  const isLifted = () => {
+    const style = screen.getByTestId('verse-16').props.style;
+    const flat = Array.isArray(style) ? Object.assign({}, ...style) : style;
+    return flat.borderRadius === 16;
+  };
+
+  // Entered at verse 16 (the saved position) — it should render lifted.
+  expect(isLifted()).toBe(true);
+
+  // A programmatic scroll event (e.g. the entry scroll-to-verse) must not clear the lift.
+  await fireEvent(screen.getByTestId('reading-scroll'), 'scroll', {
+    nativeEvent: { contentOffset: { y: 50 } },
+  });
+  expect(isLifted()).toBe(true);
+
+  // A genuine user drag clears the lift.
+  await fireEvent(screen.getByTestId('reading-scroll'), 'scrollBeginDrag', {
+    nativeEvent: { contentOffset: { y: 50 } },
+  });
+  expect(isLifted()).toBe(false);
 });

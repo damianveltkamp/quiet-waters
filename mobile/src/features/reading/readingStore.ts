@@ -37,6 +37,6 @@ export const useReadingStore = create<ReadingState>()(
       setFontScale: (fontScale) => set({ fontScale }),
       setFontFace: (fontFace) => set({ fontFace }),
     }),
-    { name: 'reading', storage: createJSONStorage(() => mmkvStorage) },
+    { name: 'reading', storage: createJSONStorage(() => mmkvStorage), version: 1 },
   ),
 );

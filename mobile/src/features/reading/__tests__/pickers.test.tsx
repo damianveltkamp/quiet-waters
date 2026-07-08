@@ -21,7 +21,6 @@ test('chapter picker renders chapters and selects one', async () => {
   const onSelect = jest.fn();
   await render(
     <ChapterPickerOverlay
-      bookCode="MAT"
       bookName="Matthew"
       chapterCount={28}
       currentChapter={11}

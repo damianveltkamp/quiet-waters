@@ -22,8 +22,11 @@ export default function VerseActionMenu({
   onClose,
 }: VerseActionMenuProps) {
   async function onShare() {
-    await shareVerse(verseText, reference, translation);
-    onClose();
+    try {
+      await shareVerse(verseText, reference, translation);
+    } finally {
+      onClose();
+    }
   }
 
   function onWallpaper() {
