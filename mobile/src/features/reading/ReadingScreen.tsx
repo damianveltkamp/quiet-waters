@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { ThemedText } from '@/components';
@@ -8,6 +8,7 @@ import { colors, spacing } from '@/theme';
 import { getBooks, getChapter } from '@/bible';
 import { useReadingStore } from '@/features/reading/readingStore';
 import { nextChapter, prevChapter } from '@/features/reading/chapterNavigation';
+import { computeMenuTop } from '@/features/reading/menuPosition';
 import VerseParagraphs, { topVisibleVerse, type VerseItem } from '@/features/reading/VerseParagraphs';
 import BookPickerOverlay from '@/features/reading/BookPickerOverlay';
 import ChapterPickerOverlay from '@/features/reading/ChapterPickerOverlay';
@@ -27,6 +28,7 @@ function Pill({ label, onPress, testID }: { label: string; onPress: () => void; 
 
 export default function ReadingScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { position, translation, fontScale, fontFace,
     openChapter, setVerse, setTranslation, setFontScale, setFontFace } = useReadingStore();
 
@@ -42,6 +44,9 @@ export default function ReadingScreen() {
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [lifted, setLifted] = useState<number | null>(position.verse);
   const [actionVerse, setActionVerse] = useState<number | null>(null);
+  const [actionY, setActionY] = useState(0); // screen Y of the long-press
+  const [menuHeight, setMenuHeight] = useState(0); // measured once the menu lays out
+  const [containerHeight, setContainerHeight] = useState(0); // full reading-screen height
 
   const scrollRef = useRef<ScrollView>(null);
   const offsets = useRef(new Map<number, number>());
@@ -96,9 +101,21 @@ export default function ReadingScreen() {
   }
 
   const actionVerseItem = verses.find((v) => v.number === actionVerse);
+  const menuTop = computeMenuTop({
+    pressY: actionY,
+    menuHeight,
+    containerHeight,
+    insetTop: insets.top,
+    insetBottom: insets.bottom,
+    margin: spacing.md,
+  });
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }}>
+    <View
+      style={{ flex: 1, backgroundColor: colors.surface }}
+      onLayout={(e: LayoutChangeEvent) => setContainerHeight(e.nativeEvent.layout.height)}
+    >
+    <SafeAreaView style={{ flex: 1 }}>
       {/* Top chrome */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.md }}>
         <Pill label={book.name} onPress={() => setOverlay('book')} />
@@ -124,7 +141,7 @@ export default function ReadingScreen() {
           liftedVerse={lifted}
           fontFace={fontFace}
           fontScale={fontScale}
-          onLongPressVerse={(n) => { setLifted(n); setActionVerse(n); setOverlay('actions'); }}
+          onLongPressVerse={(n, pageY) => { setLifted(n); setActionVerse(n); setActionY(pageY); setMenuHeight(0); setOverlay('actions'); }}
           onVerseLayout={onVerseLayout}
         />
       </ScrollView>
@@ -147,8 +164,9 @@ export default function ReadingScreen() {
         </Pressable>
       </View>
 
-      {/* Overlays */}
-      {overlay !== null && (
+      {/* Overlays (chrome-anchored). The action menu is rendered outside the
+          SafeAreaView below so it can anchor to the raw screen press position. */}
+      {overlay !== null && overlay !== 'actions' && (
         <Pressable onPress={() => setOverlay(null)} style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(28,51,68,0.15)' }} />
       )}
       {overlay === 'book' && (
@@ -176,8 +194,18 @@ export default function ReadingScreen() {
           <TranslationSheet current={translation} onSelect={(id) => { setTranslation(id); setOverlay(null); }} />
         </View>
       )}
-      {overlay === 'actions' && actionVerseItem && (
-        <View style={{ position: 'absolute', left: spacing.md, right: spacing.md, top: 72 }}>
+    </SafeAreaView>
+
+    {/* Verse action menu — anchored to the press point (full-screen coordinate
+        space), flipping/clamping to stay on-screen. Hidden until measured so it
+        never flashes at the wrong position. */}
+    {overlay === 'actions' && actionVerseItem && (
+      <>
+        <Pressable onPress={() => setOverlay(null)} style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(28,51,68,0.15)' }} />
+        <View
+          onLayout={(e: LayoutChangeEvent) => setMenuHeight(e.nativeEvent.layout.height)}
+          style={{ position: 'absolute', left: spacing.md, right: spacing.md, top: menuTop, opacity: menuHeight > 0 ? 1 : 0 }}
+        >
           <VerseActionMenu
             verseText={actionVerseItem.text}
             reference={`${book.name} ${position.chapter}:${actionVerseItem.number}`}
@@ -186,7 +214,8 @@ export default function ReadingScreen() {
             onClose={() => setOverlay(null)}
           />
         </View>
-      )}
-    </SafeAreaView>
+      </>
+    )}
+    </View>
   );
 }

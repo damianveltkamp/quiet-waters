@@ -78,6 +78,6 @@ test('long-pressing a verse fires onLongPressVerse with its number', async () =>
       onVerseLayout={() => {}}
     />,
   );
-  fireEvent(screen.getByTestId('verse-28'), 'longPress');
-  expect(onLongPress).toHaveBeenCalledWith(28);
+  fireEvent(screen.getByTestId('verse-28'), 'longPress', { nativeEvent: { pageY: 300 } });
+  expect(onLongPress).toHaveBeenCalledWith(28, 300);
 });
