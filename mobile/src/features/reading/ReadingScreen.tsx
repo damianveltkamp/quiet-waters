@@ -28,7 +28,7 @@ function Pill({ label, onPress, testID }: { label: string; onPress: () => void; 
 export default function ReadingScreen() {
   const router = useRouter();
   const { position, translation, fontScale, fontFace,
-    openChapter, setVerse, setPosition, setTranslation, setFontScale, setFontFace } = useReadingStore();
+    openChapter, setVerse, setTranslation, setFontScale, setFontFace } = useReadingStore();
 
   const books = getBooks();
   const book = useMemo(() => books.find((b) => b.code === position.bookCode) ?? books[0], [books, position.bookCode]);
@@ -52,6 +52,9 @@ export default function ReadingScreen() {
     setLifted(position.verse);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position.bookCode, position.chapter]);
+
+  // Clear any pending debounced save on unmount.
+  useEffect(() => () => { if (saveTimer.current) clearTimeout(saveTimer.current); }, []);
 
   function onVerseLayout(n: number, y: number) {
     offsets.current.set(n, y);
@@ -128,7 +131,7 @@ export default function ReadingScreen() {
       )}
       {overlay === 'book' && (
         <View style={{ position: 'absolute', left: spacing.md, right: spacing.md, top: 72 }}>
-          <BookPickerOverlay onSelectBook={(code) => { openChapter(code, 1); setOverlay('chapter'); }} />
+          <BookPickerOverlay onSelectBook={(code) => { offsets.current.clear(); openChapter(code, 1); setOverlay('chapter'); }} />
         </View>
       )}
       {overlay === 'chapter' && (
