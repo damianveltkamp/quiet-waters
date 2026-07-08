@@ -23,3 +23,15 @@ jest.mock('posthog-react-native', () => ({
   useFeatureFlag: () => undefined,
   useFeatureFlagWithPayload: () => [undefined, undefined],
 }));
+
+jest.mock('react-native-mmkv', () => {
+  const store = new Map();
+  return {
+    MMKV: jest.fn().mockImplementation(() => ({
+      getString: (k) => (store.has(k) ? store.get(k) : undefined),
+      set: (k, v) => store.set(k, String(v)),
+      delete: (k) => store.delete(k),
+      clearAll: () => store.clear(),
+    })),
+  };
+});
