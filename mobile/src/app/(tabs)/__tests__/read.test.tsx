@@ -2,7 +2,13 @@ import { render, screen } from '@testing-library/react-native';
 import Read from '@/app/(tabs)/read';
 import { useReadingStore } from '@/features/reading/readingStore';
 
-jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
+jest.mock('expo-router', () => {
+  const React = require('react');
+  return {
+    useRouter: () => ({ push: jest.fn() }),
+    useFocusEffect: (cb: () => void) => React.useEffect(cb, []),
+  };
+});
 
 test('Read route renders the reading screen with the current book', async () => {
   useReadingStore.setState({

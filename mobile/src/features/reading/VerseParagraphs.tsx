@@ -46,6 +46,16 @@ export default function VerseParagraphs({
   const lineHeight = 32 * fontScale;
   const fontFamily = FONT_FAMILY[fontFace];
 
+  // Every verse shares the same box geometry (padding + margin), so lifting a
+  // verse only toggles visual properties (background, corner radius, shadow) that
+  // don't affect layout. This keeps the lifted card the same size as a plain
+  // verse — there's no reflow / jump when the lift appears or clears.
+  const boxStyle = {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    marginBottom: spacing.xs,
+  };
+
   return (
     <View>
       {verses.map((v) => {
@@ -59,16 +69,15 @@ export default function VerseParagraphs({
             style={
               lifted
                 ? {
+                    ...boxStyle,
                     backgroundColor: colors.white,
                     borderRadius: 16,
-                    padding: spacing.md,
-                    marginVertical: spacing.sm,
                     shadowColor: colors.primary,
                     shadowOpacity: 0.12,
                     shadowRadius: 16,
                     shadowOffset: { width: 0, height: 6 },
                   }
-                : { marginBottom: spacing.xs }
+                : boxStyle
             }
           >
             <Text style={{ fontFamily, fontSize, lineHeight, color: colors.primary }}>

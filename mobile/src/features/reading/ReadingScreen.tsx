@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { ThemedText } from '@/components';
 import { colors, spacing } from '@/theme';
 import { getBooks, getChapter } from '@/bible';
@@ -47,14 +47,26 @@ export default function ReadingScreen() {
   const offsets = useRef(new Map<number, number>());
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // On chapter change, lift the saved verse again and scroll to it once laid out.
-  // This is the convergence point for chapter/book/translation/hydration changes,
-  // so it also clears the stale verse->y offsets map before verses re-lay-out.
+  // Clear the stale verse->y offsets map whenever the rendered chapter/translation
+  // changes, before the new verses re-lay-out. This is the convergence point for
+  // chapter/book/translation/hydration changes. It deliberately does NOT re-lift:
+  // the lifted "where you left off" card is only shown on entry (see useFocusEffect).
   useEffect(() => {
     offsets.current.clear();
-    setLifted(position.verse);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position.bookCode, position.chapter, translation]);
+
+  // Lift the saved verse (and scroll to it) only when the user lands on the Read
+  // screen — on first mount and each time the tab regains focus — so it helps them
+  // find their place without re-appearing every time they turn to a new chapter.
+  useFocusEffect(
+    useCallback(() => {
+      const verse = useReadingStore.getState().position.verse;
+      setLifted(verse);
+      const y = offsets.current.get(verse);
+      if (y != null) scrollRef.current?.scrollTo({ y: Math.max(0, y - 24), animated: false });
+    }, []),
+  );
 
   // Clear any pending debounced save on unmount.
   useEffect(() => () => { if (saveTimer.current) clearTimeout(saveTimer.current); }, []);
@@ -78,6 +90,7 @@ export default function ReadingScreen() {
   function go(ref: { bookCode: string; chapter: number } | null) {
     if (!ref) return;
     offsets.current.clear();
+    setLifted(null); // turning to a new chapter is not "landing on the screen" — no lift
     openChapter(ref.bookCode, ref.chapter);
     scrollRef.current?.scrollTo({ y: 0, animated: false });
   }
@@ -140,7 +153,7 @@ export default function ReadingScreen() {
       )}
       {overlay === 'book' && (
         <View style={{ position: 'absolute', left: spacing.md, right: spacing.md, top: 72 }}>
-          <BookPickerOverlay onSelectBook={(code) => { offsets.current.clear(); openChapter(code, 1); setOverlay('chapter'); }} />
+          <BookPickerOverlay onSelectBook={(code) => { offsets.current.clear(); setLifted(null); openChapter(code, 1); setOverlay('chapter'); }} />
         </View>
       )}
       {overlay === 'chapter' && (

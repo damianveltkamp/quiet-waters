@@ -3,7 +3,14 @@ import ReadingScreen from '@/features/reading/ReadingScreen';
 import { useReadingStore } from '@/features/reading/readingStore';
 
 const mockPush = jest.fn();
-jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
+jest.mock('expo-router', () => {
+  const React = require('react');
+  return {
+    useRouter: () => ({ push: mockPush }),
+    // Simulate the screen gaining focus on mount, so lift-on-entry runs in tests.
+    useFocusEffect: (cb: () => void) => React.useEffect(cb, []),
+  };
+});
 
 beforeEach(() => {
   mockPush.mockClear();
@@ -73,6 +80,24 @@ test('debounced scroll save resolves to the topmost visible verse after layout',
 
   expect(useReadingStore.getState().position.verse).toBe(16);
   timeoutSpy.mockRestore();
+});
+
+test('does not re-lift a verse when turning to a new chapter', async () => {
+  await render(<ReadingScreen />);
+
+  const isLifted = (n: number) => {
+    const style = screen.getByTestId(`verse-${n}`).props.style;
+    const flat = Array.isArray(style) ? Object.assign({}, ...style) : style;
+    return flat.borderRadius === 16;
+  };
+
+  // Entered at JHN 3:16 — the saved verse is lifted to help find the place.
+  expect(isLifted(16)).toBe(true);
+
+  // Turning to the next chapter is not "landing on the screen": nothing lifts.
+  await fireEvent.press(screen.getByTestId('reading-next')); // -> John 4
+  expect(isLifted(1)).toBe(false);
+  expect(isLifted(16)).toBe(false);
 });
 
 test('lift on entry survives a programmatic scroll but clears once the user starts dragging', async () => {

@@ -38,6 +38,34 @@ test('renders every verse number and text', async () => {
   expect(screen.getByText('28')).toBeTruthy();
 });
 
+test('lifted and non-lifted verses share the same box geometry (no layout shift)', async () => {
+  await render(
+    <VerseParagraphs
+      verses={verses}
+      liftedVerse={28}
+      fontFace="serif"
+      fontScale={1}
+      onLongPressVerse={() => {}}
+      onVerseLayout={() => {}}
+    />,
+  );
+  const flat = (id: string) => {
+    const style = screen.getByTestId(id).props.style;
+    return Array.isArray(style) ? Object.assign({}, ...style) : style;
+  };
+  const lifted = flat('verse-28'); // the lifted verse
+  const plain = flat('verse-27'); // a normal verse
+  // Layout-affecting props are identical, so toggling the lift causes no reflow.
+  expect(lifted.paddingVertical).toBe(plain.paddingVertical);
+  expect(lifted.paddingHorizontal).toBe(plain.paddingHorizontal);
+  expect(lifted.marginBottom).toBe(plain.marginBottom);
+  // The lift differs only in visual (non-layout) properties.
+  expect(lifted.borderRadius).toBe(16);
+  expect(plain.borderRadius).toBeUndefined();
+  expect(lifted.backgroundColor).toBeTruthy();
+  expect(plain.backgroundColor).toBeUndefined();
+});
+
 test('long-pressing a verse fires onLongPressVerse with its number', async () => {
   const onLongPress = jest.fn();
   await render(
