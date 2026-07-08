@@ -1,4 +1,5 @@
-import { Pressable, Text, View, type LayoutChangeEvent } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, Pressable, StyleSheet, Text, View, type LayoutChangeEvent } from 'react-native';
 import { colors, spacing, typography } from '@/theme';
 import type { FontFace } from '@/features/reading/readingStore';
 
@@ -34,6 +35,73 @@ const FONT_FAMILY: Record<FontFace, string> = {
   sans: typography.families.sans,
 };
 
+// Every verse shares this box geometry, so the lifted state never changes a
+// verse's footprint — the "lifted card" is a separate absolutely-positioned
+// layer that only fades its opacity. No reflow when the lift appears or clears.
+const BOX_STYLE = {
+  paddingVertical: spacing.sm,
+  paddingHorizontal: spacing.sm,
+  marginBottom: spacing.xs,
+};
+
+const CARD_STYLE = {
+  backgroundColor: colors.white,
+  borderRadius: 16,
+  shadowColor: colors.primary,
+  shadowOpacity: 0.12,
+  shadowRadius: 16,
+  shadowOffset: { width: 0, height: 6 },
+};
+
+interface VerseRowProps {
+  verse: VerseItem;
+  lifted: boolean;
+  fontFamily: string;
+  fontSize: number;
+  lineHeight: number;
+  onLongPressVerse: (verseNumber: number) => void;
+  onVerseLayout: (verseNumber: number, y: number) => void;
+}
+
+function VerseRow({
+  verse,
+  lifted,
+  fontFamily,
+  fontSize,
+  lineHeight,
+  onLongPressVerse,
+  onVerseLayout,
+}: VerseRowProps) {
+  // The card starts fully shown/hidden to match the initial lift (no fade on
+  // first mount), then animates whenever the lifted state changes.
+  const cardOpacity = useRef(new Animated.Value(lifted ? 1 : 0)).current;
+  useEffect(() => {
+    Animated.timing(cardOpacity, {
+      toValue: lifted ? 1 : 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [lifted, cardOpacity]);
+
+  return (
+    <Pressable
+      testID={`verse-${verse.number}`}
+      accessibilityState={{ selected: lifted }}
+      onLongPress={() => onLongPressVerse(verse.number)}
+      onLayout={(e: LayoutChangeEvent) => onVerseLayout(verse.number, e.nativeEvent.layout.y)}
+      style={BOX_STYLE}
+    >
+      <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, CARD_STYLE, { opacity: cardOpacity }]} />
+      <Text style={{ fontFamily, fontSize, lineHeight, color: colors.primary }}>
+        <Text style={{ fontFamily: typography.families.sansMedium, fontSize: fontSize * 0.6, color: colors.soft }}>
+          {verse.number}{' '}
+        </Text>
+        {verse.text}
+      </Text>
+    </Pressable>
+  );
+}
+
 export default function VerseParagraphs({
   verses,
   liftedVerse,
@@ -46,49 +114,20 @@ export default function VerseParagraphs({
   const lineHeight = 32 * fontScale;
   const fontFamily = FONT_FAMILY[fontFace];
 
-  // Every verse shares the same box geometry (padding + margin), so lifting a
-  // verse only toggles visual properties (background, corner radius, shadow) that
-  // don't affect layout. This keeps the lifted card the same size as a plain
-  // verse — there's no reflow / jump when the lift appears or clears.
-  const boxStyle = {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    marginBottom: spacing.xs,
-  };
-
   return (
     <View>
-      {verses.map((v) => {
-        const lifted = v.number === liftedVerse;
-        return (
-          <Pressable
-            key={v.number}
-            testID={`verse-${v.number}`}
-            onLongPress={() => onLongPressVerse(v.number)}
-            onLayout={(e: LayoutChangeEvent) => onVerseLayout(v.number, e.nativeEvent.layout.y)}
-            style={
-              lifted
-                ? {
-                    ...boxStyle,
-                    backgroundColor: colors.white,
-                    borderRadius: 16,
-                    shadowColor: colors.primary,
-                    shadowOpacity: 0.12,
-                    shadowRadius: 16,
-                    shadowOffset: { width: 0, height: 6 },
-                  }
-                : boxStyle
-            }
-          >
-            <Text style={{ fontFamily, fontSize, lineHeight, color: colors.primary }}>
-              <Text style={{ fontFamily: typography.families.sansMedium, fontSize: fontSize * 0.6, color: colors.soft }}>
-                {v.number}{' '}
-              </Text>
-              {v.text}
-            </Text>
-          </Pressable>
-        );
-      })}
+      {verses.map((v) => (
+        <VerseRow
+          key={v.number}
+          verse={v}
+          lifted={v.number === liftedVerse}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          lineHeight={lineHeight}
+          onLongPressVerse={onLongPressVerse}
+          onVerseLayout={onVerseLayout}
+        />
+      ))}
     </View>
   );
 }

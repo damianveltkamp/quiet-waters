@@ -82,14 +82,11 @@ test('debounced scroll save resolves to the topmost visible verse after layout',
   timeoutSpy.mockRestore();
 });
 
+const isLifted = (n: number) =>
+  screen.getByTestId(`verse-${n}`).props.accessibilityState?.selected === true;
+
 test('does not re-lift a verse when turning to a new chapter', async () => {
   await render(<ReadingScreen />);
-
-  const isLifted = (n: number) => {
-    const style = screen.getByTestId(`verse-${n}`).props.style;
-    const flat = Array.isArray(style) ? Object.assign({}, ...style) : style;
-    return flat.borderRadius === 16;
-  };
 
   // Entered at JHN 3:16 — the saved verse is lifted to help find the place.
   expect(isLifted(16)).toBe(true);
@@ -103,24 +100,18 @@ test('does not re-lift a verse when turning to a new chapter', async () => {
 test('lift on entry survives a programmatic scroll but clears once the user starts dragging', async () => {
   await render(<ReadingScreen />);
 
-  const isLifted = () => {
-    const style = screen.getByTestId('verse-16').props.style;
-    const flat = Array.isArray(style) ? Object.assign({}, ...style) : style;
-    return flat.borderRadius === 16;
-  };
-
   // Entered at verse 16 (the saved position) — it should render lifted.
-  expect(isLifted()).toBe(true);
+  expect(isLifted(16)).toBe(true);
 
   // A programmatic scroll event (e.g. the entry scroll-to-verse) must not clear the lift.
   await fireEvent(screen.getByTestId('reading-scroll'), 'scroll', {
     nativeEvent: { contentOffset: { y: 50 } },
   });
-  expect(isLifted()).toBe(true);
+  expect(isLifted(16)).toBe(true);
 
   // A genuine user drag clears the lift.
   await fireEvent(screen.getByTestId('reading-scroll'), 'scrollBeginDrag', {
     nativeEvent: { contentOffset: { y: 50 } },
   });
-  expect(isLifted()).toBe(false);
+  expect(isLifted(16)).toBe(false);
 });

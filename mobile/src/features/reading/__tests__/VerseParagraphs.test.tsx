@@ -38,7 +38,7 @@ test('renders every verse number and text', async () => {
   expect(screen.getByText('28')).toBeTruthy();
 });
 
-test('lifted and non-lifted verses share the same box geometry (no layout shift)', async () => {
+test('every verse row has identical box geometry, lift is state-only (no layout shift)', async () => {
   await render(
     <VerseParagraphs
       verses={verses}
@@ -49,21 +49,14 @@ test('lifted and non-lifted verses share the same box geometry (no layout shift)
       onVerseLayout={() => {}}
     />,
   );
-  const flat = (id: string) => {
-    const style = screen.getByTestId(id).props.style;
-    return Array.isArray(style) ? Object.assign({}, ...style) : style;
-  };
-  const lifted = flat('verse-28'); // the lifted verse
-  const plain = flat('verse-27'); // a normal verse
-  // Layout-affecting props are identical, so toggling the lift causes no reflow.
-  expect(lifted.paddingVertical).toBe(plain.paddingVertical);
-  expect(lifted.paddingHorizontal).toBe(plain.paddingHorizontal);
-  expect(lifted.marginBottom).toBe(plain.marginBottom);
-  // The lift differs only in visual (non-layout) properties.
-  expect(lifted.borderRadius).toBe(16);
-  expect(plain.borderRadius).toBeUndefined();
-  expect(lifted.backgroundColor).toBeTruthy();
-  expect(plain.backgroundColor).toBeUndefined();
+  const lifted = screen.getByTestId('verse-28');
+  const plain = screen.getByTestId('verse-27');
+  // The lifted card is a separate absolute layer, so the row box itself is
+  // identical for lifted and plain verses — the lift can never shift layout.
+  expect(lifted.props.style).toEqual(plain.props.style);
+  // The lift is carried as accessibility state, independent of any animation.
+  expect(lifted.props.accessibilityState.selected).toBe(true);
+  expect(plain.props.accessibilityState.selected).toBe(false);
 });
 
 test('long-pressing a verse fires onLongPressVerse with its number', async () => {
