@@ -1,5 +1,14 @@
 import { Image, Spacer, Text, VStack } from '@expo/ui/swift-ui';
-import { containerBackground, font, foregroundColor, lineLimit, padding } from '@expo/ui/swift-ui/modifiers';
+import {
+  allowsTightening,
+  containerBackground,
+  font,
+  foregroundColor,
+  lineLimit,
+  minimumScaleFactor,
+  multilineTextAlignment,
+  padding,
+} from '@expo/ui/swift-ui/modifiers';
 import { createWidget, type WidgetEnvironment } from 'expo-widgets';
 
 type Props = {
@@ -17,8 +26,8 @@ const QuietWatersWidget = (props: Props, environment: WidgetEnvironment) => {
   const text = props.textColor ?? '#FFFFFF';
   const muted = props.mutedColor ?? '#DCEAF0';
   const isSmall = environment.widgetFamily === 'systemSmall';
-  const verseSize = isSmall ? 13 : 17;
-  const verseLimit = isSmall ? 4 : 6;
+  const verseSize = isSmall ? 14 : 18;
+  const verseLimit = isSmall ? 7 : 10;
 
   return (
     <VStack
@@ -27,7 +36,19 @@ const QuietWatersWidget = (props: Props, environment: WidgetEnvironment) => {
       modifiers={[padding({ all: isSmall ? 12 : 16 }), containerBackground(bg, 'widget')]}
     >
       <Image systemName="cross" size={isSmall ? 12 : 16} color={muted} />
-      <Text modifiers={[font({ design: 'serif', size: verseSize }), foregroundColor(text), lineLimit(verseLimit)]}>
+      <Spacer />
+      <Text
+        modifiers={[
+          font({ design: 'serif', size: verseSize }),
+          foregroundColor(text),
+          multilineTextAlignment('center'),
+          lineLimit(verseLimit),
+          // Shrink the verse to fit rather than clipping it with an ellipsis —
+          // random verses vary a lot in length.
+          minimumScaleFactor(0.5),
+          allowsTightening(true),
+        ]}
+      >
         {props.verseText ?? 'He leads me beside quiet waters.'}
       </Text>
       <Spacer />
