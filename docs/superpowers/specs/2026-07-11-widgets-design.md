@@ -45,13 +45,15 @@ A new route (e.g. `app/widget-config.tsx`), matching the approved mockup minus
 the Content row and the Dark toggle. Single scrollable screen:
 
 - **Live preview card** (centerpiece) — verse + cross glyph + reference,
-  reflecting the selected background and the previewed size.
-- **Size toggle** — Small / Medium / Large. This is a **preview-only** control.
-  iOS decides the widget family when the user adds the widget from the system
-  gallery, and a user can place multiple sizes; the app cannot force a family.
-  The toggle only changes how the in-app preview is proportioned so the user can
-  confirm the design holds up at each size. It is **not** persisted as config and
-  does **not** affect the real widget.
+  reflecting the selected background. Rendered at a single representative size
+  (Medium, as in the mockup).
+- **No size toggle.** iOS decides the widget family when the user adds the widget
+  from the system gallery, and a user can place multiple sizes; the app cannot
+  force a family. A size control on the config screen would therefore do nothing
+  to the real widget and would mislead the user into thinking it sets the on-home
+  size — so it is deliberately omitted. The widget design must still hold up at
+  all three home families (the widget declares support for all three), but that
+  is a design concern, not a user control.
 - **Background row** — opens a picker of the existing six gradient `BACKGROUNDS`
   (`src/features/wallpaper/backgrounds.ts`), reusing the wallpaper-backgrounds
   picker pattern. Persisted.
@@ -66,7 +68,7 @@ the Content row and the Dark toggle. Single scrollable screen:
 
 - **Config** persisted via zustand + MMKV:
   `{ backgroundId: string, refresh: { mode: 'daily' | 'hourly', time?: 'HH:mm' } }`.
-  (Size is intentionally absent — see the Size toggle note above.)
+  (Size is intentionally absent — see the "No size toggle" note above.)
 - On **save** and on **every app launch**: generate a buffer of random verses
   via the existing `pickRandomVerse`, build timeline entries `{ date, props }`,
   and call the widget module's `updateTimeline`. App launch tops the buffer back
