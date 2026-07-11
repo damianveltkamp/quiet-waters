@@ -42,6 +42,27 @@
           "savePhotosPermission": "Quiet Waters saves your wallpapers to Photos.",
           "isAccessMediaLocationEnabled": false
         }
+      ],
+      [
+        "expo-widgets",
+        {
+          "bundleIdentifier": "com.quietwaters.app.widgets",
+          "groupIdentifier": "group.com.quietwaters.app",
+          "widgets": [
+            {
+              "name": "QuietWatersWidget",
+              "displayName": "Daily Verse",
+              "description": "A daily Bible verse on your home screen.",
+              "ios": { "supportedFamilies": ["systemSmall", "systemMedium", "systemLarge"] }
+            },
+            {
+              "name": "QuietWatersLockWidget",
+              "displayName": "Daily Verse",
+              "description": "A daily Bible verse on your lock screen.",
+              "ios": { "supportedFamilies": ["accessoryRectangular"] }
+            }
+          ]
+        }
       ]
     ],
     "extra": {
