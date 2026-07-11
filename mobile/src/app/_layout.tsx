@@ -13,6 +13,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { pushWidgetTimeline } from '@/features/widget/pushTimeline';
 import { AppProviders } from '@/providers/AppProviders';
 
 SplashScreen.preventAutoHideAsync();
@@ -29,6 +30,9 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
+  useEffect(() => {
+    pushWidgetTimeline();
+  }, []);
   if (!loaded && !error) return null;
   return (
     <SafeAreaProvider>
