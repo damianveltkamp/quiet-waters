@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, Pressable, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { CTAButton, Eyebrow, ThemedText } from '@/components';
 import { colors, spacing } from '@/theme';
@@ -54,52 +55,75 @@ export default function WidgetConfigScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.surface }}>
-      <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.lg }}>
-        {/* Preview (single representative size) */}
-        <LinearGradient
-          colors={bg.colors}
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }}>
+      <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
+        <Eyebrow>Home screen widget</Eyebrow>
+
+        {/* Preview floats with breathing room in the upper-middle of the screen */}
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <LinearGradient
+            colors={bg.colors}
+            style={{
+              width: '80%',
+              aspectRatio: 1.1,
+              borderRadius: 28,
+              paddingHorizontal: spacing.lg,
+              justifyContent: 'center',
+              alignItems: 'center',
+              shadowColor: colors.primary,
+              shadowOpacity: 0.28,
+              shadowRadius: 24,
+              shadowOffset: { width: 0, height: 16 },
+              elevation: 8,
+            }}
+          >
+            <ThemedText variant="body" color={bg.mutedColor} style={{ marginBottom: spacing.sm }}>
+              ✝
+            </ThemedText>
+            <ThemedText
+              variant="title"
+              color={bg.textColor}
+              align="center"
+              style={{ fontSize: 22, lineHeight: 28 }}
+            >
+              “Come to me, all who labor and are heavy laden, and I will give you rest.”
+            </ThemedText>
+            <ThemedText
+              variant="caption"
+              color={bg.mutedColor}
+              align="center"
+              style={{ marginTop: spacing.md, letterSpacing: 1.5 }}
+            >
+              MATTHEW 11:28
+            </ThemedText>
+          </LinearGradient>
+        </View>
+
+        {/* Settings + save anchored to the bottom */}
+        <View
           style={{
-            height: 170,
+            backgroundColor: colors.white,
             borderRadius: 20,
-            padding: spacing.lg,
-            justifyContent: 'center',
-            alignItems: 'center',
+            paddingHorizontal: spacing.lg,
+            marginBottom: spacing.md,
           }}
         >
-          <ThemedText variant="body" color={bg.mutedColor}>
-            ✝
-          </ThemedText>
-          <ThemedText
-            variant="title"
-            color={bg.textColor}
-            style={{ textAlign: 'center', marginTop: spacing.sm }}
-          >
-            “Come to me, all who labor and are heavy laden, and I will give you rest.”
-          </ThemedText>
-          <ThemedText variant="caption" color={bg.mutedColor} style={{ marginTop: spacing.sm }}>
-            MATTHEW 11:28
-          </ThemedText>
-        </LinearGradient>
-
-        <View style={{ backgroundColor: colors.white, borderRadius: 16, paddingHorizontal: spacing.lg }}>
           <Row
             label="BACKGROUND"
             value={bg.name}
             swatch={bg.colors}
             onPress={() => router.push('/widget-background')}
           />
+          <View style={{ height: 1, backgroundColor: colors.paleAlt }} />
           <Row
             label="REFRESH"
             value={refreshSummary(config)}
             onPress={() => router.push('/widget-refresh')}
           />
         </View>
-      </ScrollView>
 
-      <View style={{ padding: spacing.lg }}>
         <CTAButton label={saved ? 'Saved' : 'Save widget'} onPress={onSave} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
