@@ -4,7 +4,7 @@ import { spacing } from '@/theme';
 
 export default function You() {
   return (
-    <Screen variant="light">
+    <Screen variant="light" edges={['top', 'left', 'right']}>
       <View style={{ flex: 1, paddingTop: spacing.xl, gap: spacing.sm }}>
         <Eyebrow>You</Eyebrow>
         <ThemedText variant="title">Your space</ThemedText>

@@ -15,7 +15,7 @@ export default function Home() {
   };
 
   return (
-    <Screen variant="light">
+    <Screen variant="light" edges={['top', 'left', 'right']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingVertical: spacing.lg, gap: spacing.lg }}

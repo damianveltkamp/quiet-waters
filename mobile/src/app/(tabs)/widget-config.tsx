@@ -52,7 +52,7 @@ export default function WidgetConfigScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }} edges={['top', 'left', 'right']}>
       <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
         <Eyebrow>Home screen widget</Eyebrow>
 
