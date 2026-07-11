@@ -46,3 +46,21 @@ test('props carry verse text, reference, and background colors', () => {
   expect(p.bgBottom).toBe('#3A5568');
   expect(p.textColor).toBe('#FFFFFF');
 });
+
+test('launching the app mid-slot does not re-roll the current or future verse (default picker)', () => {
+  const dailyCfg = { backgroundId: 'still-water', refresh: { mode: 'daily', time: '07:00' } } as const;
+  const a = buildTimeline(dailyCfg, new Date('2026-07-11T07:30:00'));
+  const b = buildTimeline(dailyCfg, new Date('2026-07-11T15:00:00'));
+  expect(a[0].props.verseText).toBe(b[0].props.verseText); // same current slot (2026-07-11 07:00) → same verse regardless of launch time
+  expect(a[1].props.verseText).toBe(b[1].props.verseText); // same first future slot (2026-07-12 07:00)
+});
+
+test('unknown backgroundId falls back to DEFAULT_BACKGROUND (deep-night)', () => {
+  const p = buildTimeline(
+    { backgroundId: 'no-such-id', refresh: { mode: 'daily', time: '07:00' } },
+    new Date('2026-07-11T09:00:00'),
+    { pickVerse: () => ({ text: 'x', reference: 'y' }) },
+  )[0].props;
+  expect(p.bgTop).toBe('#1C3344');
+  expect(p.bgBottom).toBe('#0F1F2B');
+});

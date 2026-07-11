@@ -31,7 +31,11 @@ export default function RootLayout() {
     if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
   useEffect(() => {
-    pushWidgetTimeline();
+    try {
+      pushWidgetTimeline();
+    } catch (e) {
+      console.warn('widget timeline push failed', e);
+    }
   }, []);
   if (!loaded && !error) return null;
   return (

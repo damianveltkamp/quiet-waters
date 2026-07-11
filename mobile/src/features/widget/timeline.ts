@@ -21,7 +21,7 @@ export interface TimelineEntry {
 }
 
 export interface TimelineDeps {
-  pickVerse?: () => Verse;
+  pickVerse?: (slotDate: Date) => Verse;
   getBackground?: (id: string) => WallpaperBackground;
 }
 
@@ -29,7 +29,31 @@ function backgroundById(id: string): WallpaperBackground {
   return BACKGROUNDS.find((b) => b.id === id) ?? DEFAULT_BACKGROUND;
 }
 
-/** Milliseconds from `now` to each scheduled boundary after the immediate entry. */
+function seededRandom(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** The canonical scheduled slot (daily time or top-of-hour) that `now` currently falls within. */
+function currentSlotDate(config: WidgetConfig, now: Date): Date {
+  if (config.refresh.mode === 'hourly') {
+    const d = new Date(now);
+    d.setMinutes(0, 0, 0);
+    return d;
+  }
+  const [h, m] = config.refresh.time.split(':').map(Number);
+  const d = new Date(now);
+  d.setHours(h, m, 0, 0);
+  if (d.getTime() > now.getTime()) d.setDate(d.getDate() - 1); // today's slot hasn't started → current slot is the previous day
+  return d;
+}
+
+/** The scheduled boundary Dates (daily time or top-of-hour) after the immediate entry. */
 function boundaryDates(config: WidgetConfig, now: Date): Date[] {
   if (config.refresh.mode === 'hourly') {
     const first = new Date(now);
@@ -58,14 +82,14 @@ function boundaryDates(config: WidgetConfig, now: Date): Date[] {
 }
 
 export function buildTimeline(config: WidgetConfig, now: Date, deps: TimelineDeps = {}): TimelineEntry[] {
-  const pickVerse = deps.pickVerse ?? (() => pickRandomVerse('KJV'));
+  const pickVerse = deps.pickVerse ?? ((slotDate: Date) => pickRandomVerse('KJV', seededRandom(slotDate.getTime())));
   const getBackground = deps.getBackground ?? backgroundById;
   const bg = getBackground(config.backgroundId);
 
-  const toEntry = (date: Date): TimelineEntry => {
-    const v = pickVerse();
+  const toEntry = (displayDate: Date, slotDate: Date): TimelineEntry => {
+    const v = pickVerse(slotDate);
     return {
-      date,
+      date: displayDate,
       props: {
         verseText: v.text,
         reference: v.reference,
@@ -77,5 +101,8 @@ export function buildTimeline(config: WidgetConfig, now: Date, deps: TimelineDep
     };
   };
 
-  return [toEntry(new Date(now)), ...boundaryDates(config, now).map(toEntry)];
+  return [
+    toEntry(new Date(now), currentSlotDate(config, now)),
+    ...boundaryDates(config, now).map((d) => toEntry(d, d)),
+  ];
 }

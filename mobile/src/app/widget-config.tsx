@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter, type Href } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { CTAButton, Eyebrow, ThemedText } from '@/components';
 import { colors, spacing } from '@/theme';
 import { BACKGROUNDS } from '@/features/wallpaper/backgrounds';
@@ -87,12 +87,12 @@ export default function WidgetConfigScreen() {
             label="BACKGROUND"
             value={bg.name}
             swatch={bg.colors}
-            onPress={() => router.push('/widget-background' as Href)}
+            onPress={() => router.push('/widget-background')}
           />
           <Row
             label="REFRESH"
             value={refreshSummary(config)}
-            onPress={() => router.push('/widget-refresh' as Href)}
+            onPress={() => router.push('/widget-refresh')}
           />
         </View>
       </ScrollView>
