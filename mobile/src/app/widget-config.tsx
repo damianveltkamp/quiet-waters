@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -43,21 +42,39 @@ export default function WidgetConfigScreen() {
   const router = useRouter();
   const config = useWidgetStore((s) => s.config);
   const bg = BACKGROUNDS.find((b) => b.id === config.backgroundId) ?? BACKGROUNDS[0];
-  const [saved, setSaved] = useState(false);
 
   const onSave = () => {
     pushWidgetTimeline();
-    setSaved(true);
     Alert.alert(
       'Widget saved',
       'Long-press your home screen, tap +, and add the Quiet Waters "Daily Verse" widget.',
+      [{ text: 'Done', onPress: () => router.back() }],
     );
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }}>
       <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
-        <Eyebrow>Home screen widget</Eyebrow>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Eyebrow>Home screen widget</Eyebrow>
+          <Pressable
+            onPress={() => router.back()}
+            accessibilityLabel="Close"
+            hitSlop={8}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 16,
+              backgroundColor: colors.paleAlt,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <ThemedText variant="body" color={colors.textMuted}>
+              ×
+            </ThemedText>
+          </Pressable>
+        </View>
 
         {/* Preview floats with breathing room in the upper-middle of the screen */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -122,7 +139,7 @@ export default function WidgetConfigScreen() {
           />
         </View>
 
-        <CTAButton label={saved ? 'Saved' : 'Save widget'} onPress={onSave} />
+        <CTAButton label="Save widget" onPress={onSave} />
       </View>
     </SafeAreaView>
   );
