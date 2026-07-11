@@ -33,6 +33,7 @@ export default function Home() {
         <View style={{ gap: spacing.sm }}>
           <Eyebrow>Make it yours</Eyebrow>
           <WallpaperPromoCard onPress={() => router.push('/create')} />
+          <ActionRow icon="widget" title="Verse widget" subtitle="Add a daily verse to your Home & Lock Screen" onPress={() => router.push('/widget-config')} />
           <ActionRow icon="cross" title="Prayer" subtitle="A moment to pause and pray" onPress={() => router.push('/prayer')} />
         </View>
       </ScrollView>

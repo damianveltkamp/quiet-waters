@@ -4,7 +4,7 @@ import { ThemedText } from './ThemedText';
 import { colors, spacing } from '@/theme';
 import { tapFeedback } from '@/lib/haptics';
 
-type IconName = 'cross';
+type IconName = 'cross' | 'widget';
 
 interface Props {
   icon: IconName;
@@ -19,6 +19,17 @@ function RowIcon({ icon, color }: { icon: IconName; color: string }) {
       return (
         <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
           <Path d="M12 4v16M7 9h10" stroke={color} strokeWidth={1.8} strokeLinecap="round" />
+        </Svg>
+      );
+    case 'widget':
+      return (
+        <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+          <Path
+            d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"
+            stroke={color}
+            strokeWidth={1.8}
+            strokeLinejoin="round"
+          />
         </Svg>
       );
   }
