@@ -53,6 +53,8 @@ export default function TabsLayout() {
       <Tabs.Screen name="create" options={{ title: 'Create', tabBarIcon: ({ color }) => <CreateIcon color={color} /> }} />
       <Tabs.Screen name="you" options={{ title: 'You', tabBarIcon: ({ color }) => <YouIcon color={color} /> }} />
       <Tabs.Screen name="read" options={{ title: 'Read', tabBarIcon: ({ color }) => <ReadIcon color={color} /> }} />
+      {/* Reachable from the Home "Verse widget" row; keeps the tab bar visible but has no tab button. */}
+      <Tabs.Screen name="widget-config" options={{ href: null }} />
     </Tabs>
   );
 }

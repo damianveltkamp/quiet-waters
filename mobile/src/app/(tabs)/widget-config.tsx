@@ -48,33 +48,13 @@ export default function WidgetConfigScreen() {
     Alert.alert(
       'Widget saved',
       'Long-press your home screen, tap +, and add the Quiet Waters "Daily Verse" widget.',
-      [{ text: 'Done', onPress: () => router.back() }],
     );
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }}>
       <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Eyebrow>Home screen widget</Eyebrow>
-          <Pressable
-            onPress={() => router.back()}
-            accessibilityLabel="Close"
-            hitSlop={8}
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 16,
-              backgroundColor: colors.paleAlt,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <ThemedText variant="body" color={colors.textMuted}>
-              ×
-            </ThemedText>
-          </Pressable>
-        </View>
+        <Eyebrow>Home screen widget</Eyebrow>
 
         {/* Preview floats with breathing room in the upper-middle of the screen */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

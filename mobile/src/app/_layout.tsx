@@ -50,6 +50,14 @@ export default function RootLayout() {
             name="wallpaper-backgrounds"
             options={{ presentation: 'modal' }}
           />
+          <Stack.Screen
+            name="widget-background"
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen
+            name="widget-refresh"
+            options={{ presentation: 'modal' }}
+          />
         </Stack>
       </AppProviders>
     </SafeAreaProvider>
