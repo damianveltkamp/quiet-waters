@@ -1,4 +1,4 @@
-import { Image, Spacer, Text, VStack } from '@expo/ui/swift-ui';
+import { Image, Text, VStack } from '@expo/ui/swift-ui';
 import {
   allowsTightening,
   containerBackground,
@@ -32,26 +32,25 @@ const QuietWatersWidget = (props: Props, environment: WidgetEnvironment) => {
   return (
     <VStack
       alignment="center"
-      spacing={isSmall ? 6 : 10}
+      spacing={isSmall ? 8 : 12}
       modifiers={[padding({ all: isSmall ? 12 : 16 }), containerBackground(bg, 'widget')]}
     >
       <Image systemName="cross" size={isSmall ? 12 : 16} color={muted} />
-      <Spacer />
       <Text
         modifiers={[
           font({ design: 'serif', size: verseSize }),
           foregroundColor(text),
           multilineTextAlignment('center'),
           lineLimit(verseLimit),
-          // Shrink the verse to fit rather than clipping it with an ellipsis —
-          // random verses vary a lot in length.
+          // Fallback only: wraps at full size, shrinks solely when a long verse
+          // overflows the fixed widget height. No Spacers here — Spacer +
+          // minimumScaleFactor fight, collapsing short verses to tiny text.
           minimumScaleFactor(0.5),
           allowsTightening(true),
         ]}
       >
         {props.verseText ?? 'He leads me beside quiet waters.'}
       </Text>
-      <Spacer />
       <Text modifiers={[font({ weight: 'semibold', size: isSmall ? 9 : 11 }), foregroundColor(muted)]}>
         {(props.reference ?? 'Psalm 23:2').toUpperCase()}
       </Text>
