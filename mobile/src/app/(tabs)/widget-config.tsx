@@ -54,8 +54,6 @@ export default function WidgetConfigScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.surface }} edges={['top', 'left', 'right']}>
       <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
-        <Eyebrow>Home screen widget</Eyebrow>
-
         {/* Preview floats with breathing room in the upper-middle of the screen */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LinearGradient
