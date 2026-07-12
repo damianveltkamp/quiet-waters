@@ -12,7 +12,7 @@ import { saveWallpaperToPhotos } from '@/features/wallpaper/export';
 
 export default function Create() {
   const router = useRouter();
-  const { verse, background } = useWallpaperDraft();
+  const { verse, background, textColor, backdropOpacity } = useWallpaperDraft();
   const canvasRef = useRef<View>(null);
   const [toast, setToast] = useState(false);
   const [hint, setHint] = useState<string | null>(null);
@@ -52,7 +52,13 @@ export default function Create() {
         collapsable={false}
         style={{ position: 'absolute', top: 0, left: 0, width: screen.width, height: screen.height }}
       >
-        <WallpaperCanvas verseText={verse.text} reference={verse.reference} background={background} />
+        <WallpaperCanvas
+          verseText={verse.text}
+          reference={verse.reference}
+          background={background}
+          textColor={textColor}
+          backdropOpacity={backdropOpacity}
+        />
       </View>
 
       <SafeAreaView style={{ flex: 1, justifyContent: 'flex-end' }}>
@@ -66,6 +72,13 @@ export default function Create() {
               style={{ flex: 1, backgroundColor: colors.white, borderRadius: 999, paddingVertical: spacing.md, paddingHorizontal: spacing.lg }}
             >
               <ThemedText variant="body" color={colors.textFaint}>Search a verse</ThemedText>
+            </Pressable>
+            <Pressable
+              onPress={() => router.push('/wallpaper-style')}
+              accessibilityLabel="Text and backdrop"
+              style={{ width: 52, backgroundColor: colors.white, borderRadius: 999, alignItems: 'center', justifyContent: 'center' }}
+            >
+              <ThemedText variant="button" color={colors.primary}>Aa</ThemedText>
             </Pressable>
             <Pressable
               onPress={() => router.push('/wallpaper-backgrounds')}
