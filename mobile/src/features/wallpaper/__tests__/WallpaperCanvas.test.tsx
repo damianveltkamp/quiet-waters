@@ -23,3 +23,22 @@ test('applies the preset text color to the verse', async () => {
     : verse.props.style;
   expect(flat.color).toBe(light.textColor);
 });
+
+test('renders an image background with a scrim and white verse text', async () => {
+  const image = BACKGROUNDS.find((b) => b.kind === 'image')!;
+  await render(<WallpaperCanvas verseText="Test verse" reference="Ref 1:1" background={image} />);
+  expect(screen.getByTestId('wallpaper-image')).toBeOnTheScreen();
+  expect(screen.getByTestId('wallpaper-scrim')).toBeOnTheScreen();
+  const verse = screen.getByText(/Test verse/);
+  const flat = Array.isArray(verse.props.style)
+    ? Object.assign({}, ...verse.props.style.flat())
+    : verse.props.style;
+  expect(flat.color).toBe('#FFFFFF');
+});
+
+test('renders the verse and reference over an image background', async () => {
+  const image = BACKGROUNDS.find((b) => b.kind === 'image')!;
+  await render(<WallpaperCanvas verseText="He leads me beside quiet waters." reference="Psalm 23:2" background={image} />);
+  expect(screen.getByText(/He leads me beside quiet waters\./)).toBeOnTheScreen();
+  expect(screen.getByText('Psalm 23:2')).toBeOnTheScreen();
+});

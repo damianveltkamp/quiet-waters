@@ -1,21 +1,18 @@
-import { Image, View } from 'react-native';
+import { Image, ImageBackground, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from '@/components/ThemedText';
 import { spacing } from '@/theme';
-import type { WallpaperBackground } from './backgrounds';
+import type { Background } from './backgrounds';
 
 interface Props {
   verseText: string;
   reference: string;
-  background: WallpaperBackground;
+  background: Background;
 }
 
 export function WallpaperCanvas({ verseText, reference, background }: Props) {
-  return (
-    <LinearGradient
-      colors={background.colors}
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.xl }}
-    >
+  const content = (
+    <>
       <Image
         source={require('../../../assets/images/symbol-white.png')}
         style={{
@@ -34,6 +31,33 @@ export function WallpaperCanvas({ verseText, reference, background }: Props) {
       <ThemedText variant="eyebrow" color={background.mutedColor} style={{ marginTop: spacing.lg }}>
         {reference}
       </ThemedText>
+    </>
+  );
+
+  const centered = {
+    flex: 1,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingHorizontal: spacing.xl,
+  };
+
+  if (background.kind === 'image') {
+    const s = background.scrim ?? 0.4;
+    const edge = Math.min(s + 0.15, 0.85);
+    const mid = s * 0.3;
+    const scrim = [`rgba(0,0,0,${edge})`, `rgba(0,0,0,${mid})`, `rgba(0,0,0,${edge})`] as const;
+    return (
+      <ImageBackground testID="wallpaper-image" source={background.source} resizeMode="cover" style={{ flex: 1 }}>
+        <LinearGradient testID="wallpaper-scrim" colors={scrim} style={centered}>
+          {content}
+        </LinearGradient>
+      </ImageBackground>
+    );
+  }
+
+  return (
+    <LinearGradient colors={background.colors} style={centered}>
+      {content}
     </LinearGradient>
   );
 }
