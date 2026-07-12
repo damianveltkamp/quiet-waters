@@ -21,7 +21,9 @@ function Swatch({ bg, selected, onSelect }: { bg: Background; selected: boolean;
       ) : (
         <Image
           source={bg.source}
-          style={{ height: 140, borderRadius: 16, borderWidth: selected ? 3 : 0, borderColor: colors.primary }}
+          // Portrait mini-wallpaper: aspectRatio matches the generated 1290x2796
+          // asset, so `cover` shows the whole scene instead of a hard center crop.
+          style={{ width: '100%', aspectRatio: 1290 / 2796, borderRadius: 16, borderWidth: selected ? 3 : 0, borderColor: colors.primary }}
           resizeMode="cover"
         />
       )}
