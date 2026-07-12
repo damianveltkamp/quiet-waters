@@ -1,6 +1,5 @@
 import { BACKGROUNDS, DEFAULT_BACKGROUND } from '@/features/wallpaper/backgrounds';
 
-// Relative luminance per WCAG 2.1.
 function luminance(hex: string): number {
   const n = hex.replace('#', '');
   const rgb = [0, 2, 4].map((i) => parseInt(n.slice(i, i + 2), 16) / 255);
@@ -12,21 +11,38 @@ function contrast(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-test('ships the six named presets in mockup order', () => {
-  expect(BACKGROUNDS.map((b) => b.name)).toEqual([
+const gradients = () => BACKGROUNDS.filter((b) => b.kind === 'gradient');
+const images = () => BACKGROUNDS.filter((b) => b.kind === 'image');
+
+test('ships the six named gradient presets in mockup order', () => {
+  expect(gradients().map((b) => b.name)).toEqual([
     'Deep Night', 'Still Water', 'First Light', 'Open Sky', 'Morning Mist', 'Horizon',
   ]);
 });
 
-test('every preset has a unique id', () => {
+test('ships twenty image backgrounds after the gradients', () => {
+  expect(images()).toHaveLength(20);
+});
+
+test('every background has a unique id', () => {
   const ids = BACKGROUNDS.map((b) => b.id);
   expect(new Set(ids).size).toBe(ids.length);
 });
 
-test('text is legible against both gradient stops (contrast >= 3)', () => {
-  for (const bg of BACKGROUNDS) {
+test('gradient text is legible against both stops (contrast >= 3)', () => {
+  for (const bg of gradients()) {
+    if (bg.kind !== 'gradient') continue;
     expect(contrast(bg.textColor, bg.colors[0])).toBeGreaterThanOrEqual(3);
     expect(contrast(bg.textColor, bg.colors[1])).toBeGreaterThanOrEqual(3);
+  }
+});
+
+test('image backgrounds use white text and carry a hex fallback color', () => {
+  for (const bg of images()) {
+    if (bg.kind !== 'image') continue;
+    expect(bg.textColor).toBe('#FFFFFF');
+    expect(bg.fallbackColor).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(bg.widgetAsset).toBe(bg.id);
   }
 });
 
