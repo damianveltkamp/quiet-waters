@@ -61,7 +61,10 @@ export default function Create() {
         />
       </View>
 
-      <SafeAreaView style={{ flex: 1, justifyContent: 'flex-end' }}>
+      {/* Exclude the bottom edge: the tab bar already clears the safe area, so
+          adding the bottom inset here would push the controls too far up. Matches
+          the widget-config screen. */}
+      <SafeAreaView style={{ flex: 1, justifyContent: 'flex-end' }} edges={['top', 'left', 'right']}>
         <View style={{ padding: spacing.lg, gap: spacing.sm }}>
           {hint && <ThemedText variant="caption" color={background.textColor} align="center">{hint}</ThemedText>}
           {toast && <Toast message="Wallpaper saved" visible={toast} onHide={() => setToast(false)} />}
