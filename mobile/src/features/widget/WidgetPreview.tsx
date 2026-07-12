@@ -1,7 +1,6 @@
-import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from '@/components';
-import { colors, spacing } from '@/theme';
+import { colors } from '@/theme';
 import type { WallpaperBackground } from '@/features/wallpaper/backgrounds';
 import { familyLayout, type WidgetFamily } from './widgetLayout';
 
@@ -30,6 +29,7 @@ export function WidgetPreview({ family, background, verseText, reference }: Widg
         aspectRatio: l.aspectRatio,
         maxWidth: '92%',
         borderRadius: 24,
+        overflow: 'hidden',
         padding: l.padding,
         justifyContent: 'center',
         alignItems: 'center',
