@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Alert, Pressable, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +9,9 @@ import { BACKGROUNDS } from '@/features/wallpaper/backgrounds';
 import { useWidgetStore } from '@/features/widget/widgetStore';
 import { refreshSummary } from '@/features/widget/summary';
 import { pushWidgetTimeline } from '@/features/widget/pushTimeline';
+import { WidgetPreview } from '@/features/widget/WidgetPreview';
+import { SizeSegmentedControl } from '@/features/widget/SizeSegmentedControl';
+import type { WidgetFamily } from '@/features/widget/widgetLayout';
 
 interface RowProps {
   label: string;
@@ -42,6 +46,7 @@ export default function WidgetConfigScreen() {
   const router = useRouter();
   const config = useWidgetStore((s) => s.config);
   const bg = BACKGROUNDS.find((b) => b.id === config.backgroundId) ?? BACKGROUNDS[0];
+  const [family, setFamily] = useState<WidgetFamily>('medium');
 
   const onSave = () => {
     pushWidgetTimeline();
@@ -56,42 +61,17 @@ export default function WidgetConfigScreen() {
       <View style={{ flex: 1, paddingHorizontal: spacing.lg, paddingVertical: spacing.md }}>
         {/* Preview floats with breathing room in the upper-middle of the screen */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <LinearGradient
-            colors={bg.colors}
-            style={{
-              width: '80%',
-              aspectRatio: 1.1,
-              borderRadius: 28,
-              paddingHorizontal: spacing.lg,
-              justifyContent: 'center',
-              alignItems: 'center',
-              shadowColor: colors.primary,
-              shadowOpacity: 0.28,
-              shadowRadius: 24,
-              shadowOffset: { width: 0, height: 16 },
-              elevation: 8,
-            }}
-          >
-            <ThemedText variant="body" color={bg.mutedColor} style={{ marginBottom: spacing.sm }}>
-              ✝
-            </ThemedText>
-            <ThemedText
-              variant="title"
-              color={bg.textColor}
-              align="center"
-              style={{ fontSize: 22, lineHeight: 28 }}
-            >
-              “Come to me, all who labor and are heavy laden, and I will give you rest.”
-            </ThemedText>
-            <ThemedText
-              variant="caption"
-              color={bg.mutedColor}
-              align="center"
-              style={{ marginTop: spacing.md, letterSpacing: 1.5 }}
-            >
-              MATTHEW 11:28
-            </ThemedText>
-          </LinearGradient>
+          <WidgetPreview
+            family={family}
+            background={bg}
+            verseText="“Come to me, all who labor and are heavy laden, and I will give you rest.”"
+            reference="Matthew 11:28"
+          />
+        </View>
+
+        {/* Size toggle sits directly above the settings card */}
+        <View style={{ marginBottom: spacing.md }}>
+          <SizeSegmentedControl value={family} onChange={setFamily} />
         </View>
 
         {/* Settings + save anchored to the bottom */}
