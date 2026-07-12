@@ -18,7 +18,6 @@ export interface ImageBackground extends BackgroundBase {
   source: ImageSourcePropType; // require('...') — RN canvas + picker thumbnail
   widgetAsset: string; // native widget asset-catalog name
   fallbackColor: string; // dominant color, shown if the asset can't load
-  scrim?: number; // dark-overlay strength 0..1, default 0.4
 }
 
 export type Background = GradientBackground | ImageBackground;
