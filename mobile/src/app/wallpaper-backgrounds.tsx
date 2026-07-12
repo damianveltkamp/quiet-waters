@@ -11,7 +11,8 @@ function Swatch({ bg, selected, onSelect }: { bg: Background; selected: boolean;
     <Pressable
       accessibilityLabel={`Background ${bg.name}`}
       onPress={() => onSelect(bg)}
-      style={{ width: '30%' }}
+      // Images are 2-up (wider, so the scene is legible); gradients are 3-up.
+      style={{ width: bg.kind === 'image' ? '47%' : '30%' }}
     >
       {bg.kind === 'gradient' ? (
         <LinearGradient
