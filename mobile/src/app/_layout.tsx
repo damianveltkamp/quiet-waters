@@ -51,6 +51,15 @@ export default function RootLayout() {
             options={{ presentation: 'modal' }}
           />
           <Stack.Screen
+            name="wallpaper-style"
+            options={{
+              presentation: 'formSheet',
+              sheetGrabberVisible: true,
+              sheetAllowedDetents: [0.4],
+              sheetLargestUndimmedDetent: 0,
+            }}
+          />
+          <Stack.Screen
             name="widget-background"
             options={{ presentation: 'modal' }}
           />
