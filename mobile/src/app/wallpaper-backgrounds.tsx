@@ -20,13 +20,21 @@ function Swatch({ bg, selected, onSelect }: { bg: Background; selected: boolean;
           style={{ height: 140, borderRadius: 16, borderWidth: selected ? 3 : 0, borderColor: colors.primary }}
         />
       ) : (
-        <Image
-          source={bg.source}
-          // Portrait mini-wallpaper: aspectRatio matches the generated 1290x2796
-          // asset, so `cover` shows the whole scene instead of a hard center crop.
-          style={{ width: '100%', aspectRatio: 1290 / 2796, borderRadius: 16, borderWidth: selected ? 3 : 0, borderColor: colors.primary }}
-          resizeMode="cover"
-        />
+        // A mini-wallpaper: the card holds the phone aspect (aspectRatio on the
+        // View is reliable, unlike on Image), and the image covers it — matching
+        // how the background will be framed on the creation canvas.
+        <View
+          style={{
+            width: '100%',
+            aspectRatio: 1290 / 2796,
+            borderRadius: 16,
+            overflow: 'hidden',
+            borderWidth: selected ? 3 : 0,
+            borderColor: colors.primary,
+          }}
+        >
+          <Image source={bg.source} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+        </View>
       )}
       <ThemedText variant="caption" color={selected ? colors.primary : colors.textFaint} style={{ marginTop: spacing.xs }}>
         {bg.name}
