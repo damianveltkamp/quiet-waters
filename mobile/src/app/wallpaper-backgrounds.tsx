@@ -9,6 +9,7 @@ import { useWallpaperDraft } from '@/features/wallpaper/wallpaperDraft';
 export default function BackgroundsSheet() {
   const router = useRouter();
   const { background, setBackground } = useWallpaperDraft();
+  const gradients = BACKGROUNDS.filter((bg) => bg.kind === 'gradient');
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.surface, padding: spacing.lg }}>
@@ -28,7 +29,7 @@ export default function BackgroundsSheet() {
         contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}
         keyboardShouldPersistTaps="handled"
       >
-        {BACKGROUNDS.map((bg) => {
+        {gradients.map((bg) => {
           const selected = bg.id === background.id;
           return (
             <Pressable key={bg.id} onPress={() => setBackground(bg)} style={{ width: '30%' }}>
