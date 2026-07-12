@@ -48,9 +48,6 @@ function Swatch({
           resizeMode="cover"
         />
       )}
-      <ThemedText variant="caption" color={selected ? colors.primary : colors.textFaint} style={{ marginTop: spacing.xs }}>
-        {bg.name}
-      </ThemedText>
     </Pressable>
   );
 }
@@ -87,18 +84,18 @@ export default function BackgroundsSheet() {
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: spacing.xl }}>
         <ThemedText variant="eyebrow" color={colors.textMuted} style={{ marginBottom: spacing.md }}>
-          Colors
-        </ThemedText>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}>
-          {gradients.map((bg) => (
-            <Swatch key={bg.id} bg={bg} selected={bg.id === selectedId} onSelect={handleSelect} imgW={imgW} />
-          ))}
-        </View>
-        <ThemedText variant="eyebrow" color={colors.textMuted} style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
           Images
         </ThemedText>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}>
           {images.map((bg) => (
+            <Swatch key={bg.id} bg={bg} selected={bg.id === selectedId} onSelect={handleSelect} imgW={imgW} />
+          ))}
+        </View>
+        <ThemedText variant="eyebrow" color={colors.textMuted} style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
+          Colors
+        </ThemedText>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}>
+          {gradients.map((bg) => (
             <Swatch key={bg.id} bg={bg} selected={bg.id === selectedId} onSelect={handleSelect} imgW={imgW} />
           ))}
         </View>
