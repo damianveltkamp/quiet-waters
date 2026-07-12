@@ -1,5 +1,6 @@
 import { buildTimeline, DAILY_BUFFER, HOURLY_BUFFER } from '../timeline';
 import type { WidgetConfig } from '../config';
+import { BACKGROUNDS } from '@/features/wallpaper/backgrounds';
 
 const verse = { text: 'Peace I leave with you.', reference: 'John 14:27' };
 const deps = { pickVerse: () => verse };
@@ -63,4 +64,17 @@ test('unknown backgroundId falls back to DEFAULT_BACKGROUND (deep-night)', () =>
   )[0].props;
   expect(p.bgTop).toBe('#1C3344');
   expect(p.bgBottom).toBe('#0F1F2B');
+});
+
+test('image background resolves to its fallback color for both stops', () => {
+  const image = BACKGROUNDS.find((b) => b.kind === 'image');
+  if (!image || image.kind !== 'image') throw new Error('expected an image background');
+  const p = buildTimeline(
+    { backgroundId: image.id, refresh: { mode: 'daily', time: '07:00' } },
+    new Date('2026-07-11T09:00:00'),
+    { pickVerse: () => ({ text: 'x', reference: 'y' }) },
+  )[0].props;
+  expect(p.bgTop).toBe(image.fallbackColor);
+  expect(p.bgBottom).toBe(image.fallbackColor);
+  expect(p.textColor).toBe('#FFFFFF');
 });

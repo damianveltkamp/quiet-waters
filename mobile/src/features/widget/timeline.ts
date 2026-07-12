@@ -88,13 +88,15 @@ export function buildTimeline(config: WidgetConfig, now: Date, deps: TimelineDep
 
   const toEntry = (displayDate: Date, slotDate: Date): TimelineEntry => {
     const v = pickVerse(slotDate);
+    const [bgTop, bgBottom] =
+      bg.kind === 'image' ? [bg.fallbackColor, bg.fallbackColor] : bg.colors;
     return {
       date: displayDate,
       props: {
         verseText: v.text,
         reference: v.reference,
-        bgTop: bg.colors[0],
-        bgBottom: bg.colors[1],
+        bgTop,
+        bgBottom,
         textColor: bg.textColor,
         mutedColor: bg.mutedColor,
       },
