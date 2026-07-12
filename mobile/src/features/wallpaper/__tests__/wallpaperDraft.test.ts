@@ -21,3 +21,16 @@ test('setTranslation and setBackground update state', () => {
   expect(useWallpaperDraft.getState().translation).toBe('BSB');
   expect(useWallpaperDraft.getState().background.name).toBe('Horizon');
 });
+
+test('defaults textColor to white and backdropOpacity to 0.45', () => {
+  const s = useWallpaperDraft.getState();
+  expect(s.textColor).toBe('#FFFFFF');
+  expect(s.backdropOpacity).toBe(0.45);
+});
+
+test('setTextColor and setBackdropOpacity update state', () => {
+  useWallpaperDraft.getState().setTextColor('#1C3344');
+  useWallpaperDraft.getState().setBackdropOpacity(0.7);
+  expect(useWallpaperDraft.getState().textColor).toBe('#1C3344');
+  expect(useWallpaperDraft.getState().backdropOpacity).toBe(0.7);
+});
