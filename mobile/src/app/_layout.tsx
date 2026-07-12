@@ -56,7 +56,7 @@ export default function RootLayout() {
               presentation: 'formSheet',
               sheetGrabberVisible: true,
               sheetAllowedDetents: [0.4],
-              sheetLargestUndimmedDetent: 0,
+              sheetLargestUndimmedDetentIndex: 0,
             }}
           />
           <Stack.Screen
