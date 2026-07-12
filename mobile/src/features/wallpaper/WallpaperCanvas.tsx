@@ -12,6 +12,8 @@ interface Props {
   backdropOpacity: number; // 0..1
 }
 
+// Assumes a 6-digit `#RRGGBB` hex input. Safe here because `textColor` only
+// ever comes from the fixed TEXT_COLORS swatch palette (see wallpaper-style.tsx).
 function hexToRgba(hex: string, alpha: number): string {
   const h = hex.replace('#', '');
   const r = parseInt(h.slice(0, 2), 16);

@@ -11,10 +11,10 @@ const TEXT_COLORS: readonly { label: string; value: string }[] = [
   { label: 'Light Blue', value: colors.accent },
 ];
 
-function ColorSwatch({ value, selected, onSelect }: { value: string; selected: boolean; onSelect: (v: string) => void }) {
+function ColorSwatch({ label, value, selected, onSelect }: { label: string; value: string; selected: boolean; onSelect: (v: string) => void }) {
   return (
     <Pressable
-      accessibilityLabel={`Text color ${value}`}
+      accessibilityLabel={`Text color ${label}`}
       onPress={() => onSelect(value)}
       style={{
         width: 44,
@@ -42,7 +42,7 @@ export default function WallpaperStyleSheet() {
         </ThemedText>
         <View style={{ flexDirection: 'row', gap: spacing.md }}>
           {TEXT_COLORS.map((c) => (
-            <ColorSwatch key={c.value} value={c.value} selected={c.value === textColor} onSelect={setTextColor} />
+            <ColorSwatch key={c.value} label={c.label} value={c.value} selected={c.value === textColor} onSelect={setTextColor} />
           ))}
         </View>
 

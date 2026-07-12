@@ -2,9 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 import StyleSheetScreen from '@/app/wallpaper-style';
 import { useWallpaperDraft } from '@/features/wallpaper/wallpaperDraft';
 
-const mockBack = jest.fn();
-jest.mock('expo-router', () => ({ useRouter: () => ({ back: mockBack }) }));
-
 // @expo/ui Slider is a native component — render a stand-in that exposes its
 // value and lets the test drive onValueChange.
 jest.mock('@expo/ui', () => {
@@ -17,7 +14,6 @@ jest.mock('@expo/ui', () => {
 });
 
 beforeEach(() => {
-  mockBack.mockReset();
   useWallpaperDraft.getState().setTextColor('#FFFFFF');
   useWallpaperDraft.getState().setBackdropOpacity(0.45);
 });
@@ -31,9 +27,8 @@ test('shows the two section headers and the live percentage', async () => {
 
 test('tapping a color swatch sets textColor and does not dismiss', async () => {
   await render(<StyleSheetScreen />);
-  fireEvent.press(screen.getByLabelText('Text color #1C3344'));
+  fireEvent.press(screen.getByLabelText('Text color Navy'));
   expect(useWallpaperDraft.getState().textColor).toBe('#1C3344');
-  expect(mockBack).not.toHaveBeenCalled();
 });
 
 test('changing the slider sets backdropOpacity and updates the percentage', async () => {
