@@ -86,7 +86,7 @@ export default function WidgetConfigScreen() {
           <Row
             label="BACKGROUND"
             value={bg.name}
-            swatch={bg.colors}
+            swatch={bg.kind === 'gradient' ? bg.colors : [bg.fallbackColor, bg.fallbackColor]}
             onPress={() => router.push('/widget-background')}
           />
           <View style={{ height: 1, backgroundColor: colors.paleAlt }} />
