@@ -27,7 +27,7 @@ export default function WidgetBackgroundScreen() {
         style={{ flex: 1 }}
         contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md }}
       >
-        {BACKGROUNDS.map((bg) => {
+        {BACKGROUNDS.filter((bg) => bg.kind === 'gradient').map((bg) => {
           const selected = bg.id === backgroundId;
           return (
             <Pressable
