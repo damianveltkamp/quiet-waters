@@ -53,10 +53,8 @@ export default function RootLayout() {
           <Stack.Screen
             name="wallpaper-style"
             options={{
-              presentation: 'formSheet',
-              sheetGrabberVisible: true,
-              sheetAllowedDetents: [0.4],
-              sheetLargestUndimmedDetentIndex: 0,
+              presentation: 'transparentModal',
+              animation: 'slide_from_bottom',
             }}
           />
           <Stack.Screen

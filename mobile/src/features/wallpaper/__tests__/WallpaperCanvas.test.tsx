@@ -25,14 +25,14 @@ test('renders a scrim over a gradient background', async () => {
   expect(screen.getByTestId('wallpaper-scrim')).toBeOnTheScreen();
 });
 
-test('scrim is fully transparent at backdropOpacity 0', async () => {
+test('scrim is fully transparent at backdropOpacity 0 and darkens with opacity', async () => {
   await render(<WallpaperCanvas verseText="Test verse" reference="Ref 1:1" background={BACKGROUNDS[0]} textColor="#FFFFFF" backdropOpacity={0} />);
-  const scrim = screen.getByTestId('wallpaper-scrim');
-  // jest-expo's native-component test renderer runs LinearGradient's `colors`
-  // prop through RN's color processing, turning each rgba(...) string into a
-  // 32-bit color int. rgba(0,0,0,0) always normalizes to 0 (fully
-  // transparent), which is what we assert here instead of the raw strings.
-  expect(scrim.props.colors).toEqual([0, 0, 0]);
+  expect(flatStyle(screen.getByTestId('wallpaper-scrim')).backgroundColor).toBe('rgba(0,0,0,0)');
+});
+
+test('scrim is a uniform overlay at the given opacity', async () => {
+  await render(<WallpaperCanvas verseText="Test verse" reference="Ref 1:1" background={BACKGROUNDS[0]} textColor="#FFFFFF" backdropOpacity={0.45} />);
+  expect(flatStyle(screen.getByTestId('wallpaper-scrim')).backgroundColor).toBe('rgba(0,0,0,0.45)');
 });
 
 test('renders an image background with a scrim', async () => {

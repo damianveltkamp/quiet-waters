@@ -49,26 +49,25 @@ export function WallpaperCanvas({ verseText, reference, background, textColor, b
     paddingHorizontal: spacing.xl,
   };
 
-  // Full-screen vignette scrim over every background. `s = 0` is fully
-  // transparent; darker at the edges keeps centered text legible.
-  const s = backdropOpacity;
-  const scrim = [`rgba(0,0,0,${s})`, `rgba(0,0,0,${s * 0.35})`, `rgba(0,0,0,${s})`] as const;
+  // Uniform full-screen dark overlay over every background. `s = 0` is fully
+  // transparent (off); `s = 1` is solid black.
+  const scrim = { backgroundColor: `rgba(0,0,0,${backdropOpacity})` };
 
   if (background.kind === 'image') {
     return (
       <ImageBackground testID="wallpaper-image" source={background.source} resizeMode="cover" style={{ flex: 1 }}>
-        <LinearGradient testID="wallpaper-scrim" colors={scrim} style={centered}>
+        <View testID="wallpaper-scrim" style={[centered, scrim]}>
           {content}
-        </LinearGradient>
+        </View>
       </ImageBackground>
     );
   }
 
   return (
     <LinearGradient colors={background.colors} style={{ flex: 1 }}>
-      <LinearGradient testID="wallpaper-scrim" colors={scrim} style={centered}>
+      <View testID="wallpaper-scrim" style={[centered, scrim]}>
         {content}
-      </LinearGradient>
+      </View>
     </LinearGradient>
   );
 }
