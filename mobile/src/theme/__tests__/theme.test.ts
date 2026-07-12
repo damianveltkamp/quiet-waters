@@ -14,3 +14,6 @@ test('gradients define light and dark stop pairs', () => {
   expect(gradients.light).toHaveLength(2);
   expect(gradients.dark).toHaveLength(2);
 });
+test('exposes the gold text-color token', () => {
+  expect(colors.gold).toBe('#C9A96A');
+});

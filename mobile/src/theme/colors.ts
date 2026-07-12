@@ -4,6 +4,7 @@ export const colors = {
   mid: '#5E8298',
   soft: '#8AA2B0',
   accent: '#9CC0D4',
+  gold: '#C9A96A',
   pale: '#C9DCE5',
   paleAlt: '#E2ECEF',
   surface: '#F4F8F9',
